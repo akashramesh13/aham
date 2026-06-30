@@ -1,4 +1,5 @@
-import { lightTheme } from "@/styles/theme";
+import { Mood } from "@/types/mood";
+import { Theme } from "@/types/theme";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, StyleSheet, Text } from "react-native";
 import Animated, {
@@ -7,7 +8,6 @@ import Animated, {
   withSequence,
   withSpring,
 } from "react-native-reanimated";
-import { Mood } from "../../../constants";
 import useTheme from "../hooks/useTheme";
 
 type MoodButtonProps = {
@@ -31,8 +31,8 @@ export default function MoodButton({
   }));
 
   const handlePress = () => {
+    // eslint-disable-next-line
     scale.value = withSequence(withSpring(1.15), withSpring(1));
-
     onPress();
   };
 
@@ -65,7 +65,7 @@ export default function MoodButton({
   );
 }
 
-const createStyles = (theme: typeof lightTheme) =>
+const createStyles = (theme: Theme) =>
   StyleSheet.create({
     button: {
       alignItems: "center",

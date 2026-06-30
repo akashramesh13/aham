@@ -1,6 +1,7 @@
-import { lightTheme } from "@/styles/theme";
+import { Theme } from "@/types/theme";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import AppHeader from "../components/AppHeader";
 import CustomButton from "../components/CustomButton";
 import RadioList from "../components/RadioList";
 import useTheme from "../hooks/useTheme";
@@ -12,6 +13,7 @@ export default function Settings() {
 
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
+      <AppHeader title="Settings" />
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.heading}>Appearance</Text>
         <RadioList
@@ -32,7 +34,7 @@ export default function Settings() {
   );
 }
 
-const createStyles = (theme: typeof lightTheme) =>
+const createStyles = (theme: Theme) =>
   StyleSheet.create({
     container: {
       flex: 1,

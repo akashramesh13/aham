@@ -1,18 +1,21 @@
-import { lightTheme } from "@/styles/theme";
+import { Theme } from "@/types/theme";
 import { StyleSheet, Text, View } from "react-native";
 import useTheme from "../hooks/useTheme";
 import HamburgerMenu from "./HamburgerMenu";
 
-const AppHeader = () => {
+type AppHeaderProps = {
+  title: string;
+  showMenu?: boolean;
+};
+
+const AppHeader = ({ title, showMenu = false }: AppHeaderProps) => {
   const { theme } = useTheme();
   const styles = createStyles(theme);
   return (
     <>
       <View style={styles.header}>
-        <View style={styles.side}>
-          <HamburgerMenu />
-        </View>
-        <Text style={styles.title}>Journal</Text>
+        <View style={styles.side}>{showMenu && <HamburgerMenu />}</View>
+        <Text style={styles.title}>{title ?? "अहम्"}</Text>
         <View style={styles.side} />
       </View>
       <View style={styles.lineStyle} />
@@ -20,7 +23,7 @@ const AppHeader = () => {
   );
 };
 
-const createStyles = (theme: typeof lightTheme) =>
+const createStyles = (theme: Theme) =>
   StyleSheet.create({
     title: {
       color: theme.text,

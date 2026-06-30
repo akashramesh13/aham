@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
+import { Platform, Pressable } from "react-native";
 import useTheme from "../hooks/useTheme";
-import { Pressable } from "react-native";
 
 export default function TabLayout() {
   const { theme } = useTheme();
@@ -14,16 +14,19 @@ export default function TabLayout() {
           backgroundColor: theme.background,
           borderTopColor: theme.border,
         },
-        tabBarButton: (props) => {
-          const { ref, ...rest } = props as any;
-          return <Pressable {...rest} android_ripple={null} />;
-        },
+        tabBarButton:
+          Platform.OS === "android"
+            ? (props) => {
+                const { ref, ...rest } = props as any;
+                return <Pressable {...rest} android_ripple={null} />;
+              }
+            : undefined,
         tabBarActiveTintColor: theme.text,
         tabBarInactiveTintColor: theme.textSecondary,
       }}
     >
       <Tabs.Screen
-        name="home"
+        name="index"
         options={{
           title: "Home",
           tabBarIcon: ({ color, size }) => (

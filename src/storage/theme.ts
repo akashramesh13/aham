@@ -1,8 +1,7 @@
+import { ThemeMode } from "@/types/theme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const THEME_KEY = "theme";
-
-export type ThemeMode = "light" | "dark" | "system";
 
 export const getTheme = async (): Promise<ThemeMode> => {
   const value = await AsyncStorage.getItem(THEME_KEY);

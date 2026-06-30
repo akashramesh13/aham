@@ -1,4 +1,6 @@
-export const lightTheme = {
+import { Theme } from "@/types/theme";
+
+export const lightTheme: Theme = {
   background: "#FFFFFF",
   surface: "#F8F8F8",
   surface2: "#EFEFEF",
@@ -7,7 +9,7 @@ export const lightTheme = {
   border: "#E5E5E5",
 };
 
-export const darkTheme = {
+export const darkTheme: Theme = {
   background: "#000000",
   surface: "#111111",
   surface2: "#1C1C1C",

@@ -15,5 +15,3 @@ export const moods = [
     icon: "sad-outline",
   },
 ] as const;
-
-export type Mood = (typeof moods)[number];

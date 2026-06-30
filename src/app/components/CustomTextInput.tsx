@@ -1,4 +1,4 @@
-import { lightTheme } from "@/styles/theme";
+import { Theme } from "@/types/theme";
 import { forwardRef } from "react";
 import { StyleSheet, TextInput, TextInputProps } from "react-native";
 import useTheme from "../hooks/useTheme";
@@ -28,9 +28,7 @@ const CustomTextInput = forwardRef<TextInput, CustomTextInputProps>(
   },
 );
 
-export default CustomTextInput;
-
-const createStyles = (theme: typeof lightTheme) =>
+const createStyles = (theme: Theme) =>
   StyleSheet.create({
     input: {
       marginTop: 5,
@@ -42,3 +40,6 @@ const createStyles = (theme: typeof lightTheme) =>
       fontSize: 16,
     },
   });
+
+CustomTextInput.displayName = "CustomTextInput";
+export default CustomTextInput;

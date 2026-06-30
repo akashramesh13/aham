@@ -1,29 +1,28 @@
-import { lightTheme } from "@/styles/theme";
-import { useState } from "react";
+import { HoursOfSleepCardProps } from "@/types/hoursOfSleep";
+import { Theme } from "@/types/theme";
 import { StyleSheet, Text, View } from "react-native";
 import useTheme from "../hooks/useTheme";
 import CustomTextInput from "./CustomTextInput";
 
-const HoursOfSleepCard = () => {
+const HoursOfSleepCard = ({ value, onChange }: HoursOfSleepCardProps) => {
   const { theme } = useTheme();
   const styles = createStyles(theme);
-  const [hoursOfSleep, setHoursOfSleep] = useState("");
   return (
     <View style={styles.sleepContainer}>
       <Text style={styles.title}>Hours of Sleep</Text>
       <CustomTextInput
-        placeholder="Hours of sleep"
-        value={hoursOfSleep}
-        numberOfLines={1}
-        onChangeText={(text) => setHoursOfSleep(text.replace(/[^0-9.]/g, ""))}
-        keyboardType="decimal-pad"
-        style={styles.input}
+        style={{ textAlign: "center", fontSize: 25 }}
+        value={value?.toString() ?? ""}
+        onChangeText={(text) => {
+          const cleaned = text.replace(/[^0-9.]/g, "");
+          onChange(cleaned === "" ? null : Number(cleaned));
+        }}
       />
     </View>
   );
 };
 
-const createStyles = (theme: typeof lightTheme) =>
+const createStyles = (theme: Theme) =>
   StyleSheet.create({
     sleepContainer: {
       flex: 1,
@@ -31,6 +30,7 @@ const createStyles = (theme: typeof lightTheme) =>
       borderRadius: 16,
       padding: 16,
       flexDirection: "column",
+      minHeight: 190,
     },
     title: {
       fontSize: 18,

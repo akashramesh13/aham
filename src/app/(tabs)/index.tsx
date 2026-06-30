@@ -1,9 +1,8 @@
-import { lightTheme } from "@/styles/theme";
+import { Theme } from "@/types/theme";
 import { ScrollView, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AppHeader from "../components/AppHeader";
 import TodayOverview from "../components/TodayOverview";
-import YesterdayOverview from "../components/YesterdayOverview";
 import useTheme from "../hooks/useTheme";
 
 export default function HomeScreen() {
@@ -12,8 +11,8 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
+      <AppHeader title={"अहम्"} />
       <ScrollView contentContainerStyle={styles.content}>
-        <AppHeader />
         {/* <YesterdayOverview /> */}
         <TodayOverview />
       </ScrollView>
@@ -21,7 +20,7 @@ export default function HomeScreen() {
   );
 }
 
-const createStyles = (theme: typeof lightTheme) =>
+const createStyles = (theme: Theme) =>
   StyleSheet.create({
     container: {
       flex: 1,

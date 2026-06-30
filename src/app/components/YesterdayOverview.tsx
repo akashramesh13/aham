@@ -1,4 +1,4 @@
-import { lightTheme } from "@/styles/theme";
+import { Theme } from "@/types/theme";
 import { StyleSheet, Text, View } from "react-native";
 import useTheme from "../hooks/useTheme";
 
@@ -26,7 +26,7 @@ const YesterdayOverview = () => {
   );
 };
 
-const createStyles = (theme: typeof lightTheme) =>
+const createStyles = (theme: Theme) =>
   StyleSheet.create({
     container: {
       gap: 4,

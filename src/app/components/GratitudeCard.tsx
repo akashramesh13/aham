@@ -1,14 +1,14 @@
-import { lightTheme } from "@/styles/theme";
+import { GratitudeCardProps } from "@/types/gratitudeCard";
+import { Theme } from "@/types/theme";
 import { Ionicons } from "@expo/vector-icons";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import useTheme from "../hooks/useTheme";
 import CustomTextInput from "./CustomTextInput";
 
-const GratitudeCard = () => {
+const GratitudeCard = ({ gratitude, onChange }: GratitudeCardProps) => {
   const { theme } = useTheme();
   const styles = createStyles(theme);
-  const [gratitude, setGratitude] = useState([""]);
   const inputRefs = useRef<(TextInput | null)[]>([]);
   return (
     <View style={styles.gratitudeContainer}>
@@ -22,20 +22,20 @@ const GratitudeCard = () => {
             }}
             style={styles.input}
             value={item}
-            placeholder="Grateful for..."
+            placeholder={gratitude.length === 3 ? "" : "↵ to add more"}
             onChangeText={(text) => {
               const next = [...gratitude];
               next[index] = text;
-              setGratitude(next);
+              onChange(next);
             }}
-            returnKeyType={index === 2 ? "done" : "next"}
+            returnKeyType={index === 3 ? "done" : "next"}
             onSubmitEditing={() => {
               if (
                 index === gratitude.length - 1 &&
                 gratitude.length < 3 &&
                 item.trim() !== ""
               ) {
-                setGratitude((prev) => [...prev, ""]);
+                onChange([...gratitude, ""]);
 
                 requestAnimationFrame(() => {
                   inputRefs.current[index + 1]?.focus();
@@ -44,10 +44,10 @@ const GratitudeCard = () => {
             }}
           />
 
-          {gratitude.length > 1 && item.trim() === "" && (
+          {gratitude.length > 1 && (
             <Pressable
               onPress={() => {
-                setGratitude((prev) => prev.filter((_, i) => i !== index));
+                onChange(gratitude.filter((_, i) => i !== index));
               }}
             >
               <Ionicons
@@ -64,13 +64,14 @@ const GratitudeCard = () => {
   );
 };
 
-const createStyles = (theme: typeof lightTheme) =>
+const createStyles = (theme: Theme) =>
   StyleSheet.create({
     gratitudeContainer: {
       flex: 1,
       backgroundColor: theme.surface,
       borderRadius: 16,
       padding: 16,
+      minHeight: 190,
     },
     title: {
       alignSelf: "center",

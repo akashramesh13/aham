@@ -1,20 +1,11 @@
+import { SubmitButtonProps } from "@/types/submitButton";
 import { Theme } from "@/types/theme";
 import { Pressable, StyleSheet, Text } from "react-native";
 import useTheme from "../hooks/useTheme";
 
-type CustomButtonProps = {
-  value: string;
-  fontFamily?: string;
-};
-
-export default function CustomButton({
-  value,
-  fontFamily = "monospace",
-}: CustomButtonProps) {
+const SubmitButton = ({ entry }: SubmitButtonProps) => {
   const { theme } = useTheme();
-
-  const styles = createStyles(theme, fontFamily);
-
+  const styles = createStyles(theme);
   return (
     <Pressable
       style={({ pressed }) => [
@@ -23,13 +14,14 @@ export default function CustomButton({
           backgroundColor: pressed ? theme.border : theme.text,
         },
       ]}
-      onPress={() => alert("Pressed")}
+      onPress={() => alert(JSON.stringify(entry, null, 2))}
     >
-      <Text style={styles.text}>{value}</Text>
+      <Text style={styles.text}>{JSON.stringify(entry, null, 2)}</Text>
     </Pressable>
   );
-}
-const createStyles = (theme: Theme, fontFamily?: string) =>
+};
+
+const createStyles = (theme: Theme) =>
   StyleSheet.create({
     button: {
       backgroundColor: theme.text,
@@ -45,6 +37,8 @@ const createStyles = (theme: Theme, fontFamily?: string) =>
       color: theme.background,
       fontSize: 18,
       fontWeight: "600",
-      fontFamily: fontFamily,
+      fontFamily: "BodyFont-Regular",
     },
   });
+
+export default SubmitButton;
