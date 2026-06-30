@@ -29,6 +29,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     loadTheme();
   }, []);
 
+  if (loading) {
+    return null;
+  }
+
   const setTheme = async (newTheme: ThemeMode) => {
     setThemeState(newTheme);
     await saveTheme(newTheme);

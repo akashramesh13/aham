@@ -53,6 +53,7 @@ export default function RadioList<T extends string>({
             <Text
               style={{
                 color: theme.text,
+                fontFamily: styles.text.fontFamily,
                 fontSize: 18,
               }}
             >
@@ -84,5 +85,8 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
+  },
+  text: {
+    fontFamily: "monospace",
   },
 });
