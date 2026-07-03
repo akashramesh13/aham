@@ -1,43 +1,53 @@
 import { SubmitButtonProps } from "@/types/submitButton";
 import { Theme } from "@/types/theme";
-import { Pressable, StyleSheet, Text } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import useTheme from "../hooks/useTheme";
 
-const SubmitButton = ({ entry }: SubmitButtonProps) => {
+const SubmitButton = ({ onPress }: SubmitButtonProps) => {
   const { theme } = useTheme();
   const styles = createStyles(theme);
   return (
-    <Pressable
-      style={({ pressed }) => [
-        styles.button,
-        {
-          backgroundColor: pressed ? theme.border : theme.text,
-        },
-      ]}
-      onPress={() => alert(JSON.stringify(entry, null, 2))}
-    >
-      <Text style={styles.text}>{JSON.stringify(entry, null, 2)}</Text>
-    </Pressable>
+    <View style={styles.buttonContainer}>
+      <Pressable
+        style={({ pressed }) => [
+          styles.button,
+          pressed && styles.buttonPressed,
+        ]}
+        onPress={onPress}
+      >
+        <Ionicons name="save-outline" size={36} color={theme.text} />
+        <Text style={styles.text}>Save</Text>
+      </Pressable>
+    </View>
   );
 };
 
 const createStyles = (theme: Theme) =>
   StyleSheet.create({
+    buttonContainer: {
+      marginTop: 25,
+      flexDirection: "column",
+    },
     button: {
-      backgroundColor: theme.text,
-      paddingVertical: 14,
-      paddingHorizontal: 20,
-      borderRadius: 10,
       alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: theme.surface,
+      borderRadius: 12,
+      paddingVertical: 14,
     },
     buttonPressed: {
       opacity: 0.7,
     },
     text: {
-      color: theme.background,
+      color: theme.text,
       fontSize: 18,
       fontWeight: "600",
       fontFamily: "BodyFont-Regular",
+    },
+    saveIcon: {
+      fontSize: 50,
+      color: theme.text,
     },
   });
 

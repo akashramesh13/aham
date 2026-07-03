@@ -1,17 +1,13 @@
+import { getTheme, saveTheme } from "@/storage/theme";
+import { ThemeMode } from "@/types/theme";
+import { ThemeContextType } from "@/types/themeContext";
 import {
   createContext,
+  ReactNode,
   useContext,
   useEffect,
   useState,
-  ReactNode,
 } from "react";
-import { getTheme, saveTheme, ThemeMode } from "@/storage/theme";
-
-type ThemeContextType = {
-  theme: ThemeMode;
-  setTheme: (theme: ThemeMode) => Promise<void>;
-  loading: boolean;
-};
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 

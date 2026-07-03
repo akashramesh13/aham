@@ -1,5 +1,3 @@
-import { JournalEntry } from "./journal";
-
 export type SubmitButtonProps = {
-  entry: JournalEntry;
+  onPress: () => void | Promise<void>;
 };

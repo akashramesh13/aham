@@ -1,4 +1,4 @@
-import { Mood } from "@/types/mood";
+import { MoodButtonProps } from "@/types/moodButton";
 import { Theme } from "@/types/theme";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, StyleSheet, Text } from "react-native";
@@ -7,14 +7,9 @@ import Animated, {
   useSharedValue,
   withSequence,
   withSpring,
+  withTiming,
 } from "react-native-reanimated";
 import useTheme from "../hooks/useTheme";
-
-type MoodButtonProps = {
-  mood: Mood;
-  selected: boolean;
-  onPress: () => void;
-};
 
 export default function MoodButton({
   mood,
@@ -25,43 +20,63 @@ export default function MoodButton({
   const styles = createStyles(theme);
 
   const scale = useSharedValue(1);
+  const translateX = useSharedValue(0);
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
+    transform: [{ translateX: translateX.value }, { scale: scale.value }],
   }));
 
   const handlePress = () => {
-    // eslint-disable-next-line
-    scale.value = withSequence(withSpring(1.15), withSpring(1));
+    switch (mood.label) {
+      case "happy":
+        scale.value = withSequence(withSpring(1.45), withSpring(1));
+        break;
+
+      case "neutral":
+        scale.value = withSequence(
+          withTiming(1.15, { duration: 100 }),
+          withTiming(1, { duration: 100 }),
+        );
+        break;
+
+      case "sad":
+        translateX.value = withSequence(
+          withTiming(-4, { duration: 40 }),
+          withTiming(4, { duration: 40 }),
+          withTiming(-3, { duration: 40 }),
+          withTiming(3, { duration: 40 }),
+          withTiming(0, { duration: 40 }),
+        );
+        break;
+    }
+
     onPress();
   };
 
   return (
-    <>
-      <Animated.View style={animatedStyle}>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={`Select ${mood.label} mood`}
-          accessibilityState={{ selected }}
-          onPress={handlePress}
-          style={({ pressed }) => [
-            styles.button,
-            selected && styles.selectedButton,
-            pressed && styles.pressedButton,
-          ]}
-        >
-          <Ionicons
-            name={mood.icon}
-            size={30}
-            color={selected ? theme.background : theme.text}
-          />
+    <Animated.View style={animatedStyle}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={`Select ${mood.label} mood`}
+        accessibilityState={{ selected }}
+        onPress={handlePress}
+        style={({ pressed }) => [
+          styles.button,
+          selected && styles.selectedButton,
+          pressed && styles.pressedButton,
+        ]}
+      >
+        <Ionicons
+          name={mood.icon}
+          size={30}
+          color={selected ? theme.background : theme.text}
+        />
 
-          <Text style={[styles.label, selected && styles.selectedLabel]}>
-            {mood.display}
-          </Text>
-        </Pressable>
-      </Animated.View>
-    </>
+        <Text style={[styles.label, selected && styles.selectedLabel]}>
+          {mood.display}
+        </Text>
+      </Pressable>
+    </Animated.View>
   );
 }
 

@@ -1,12 +1,8 @@
 import { Theme } from "@/types/theme";
 import { forwardRef } from "react";
-import { StyleSheet, TextInput, TextInputProps } from "react-native";
+import { StyleSheet, TextInput } from "react-native";
 import useTheme from "../hooks/useTheme";
-
-type CustomTextInputProps = {
-  value: string;
-  onChangeText: (text: string) => void;
-} & TextInputProps;
+import { CustomTextInputProps } from "@/types/customTextInput";
 
 const CustomTextInput = forwardRef<TextInput, CustomTextInputProps>(
   ({ value, onChangeText, style, ...props }, ref) => {

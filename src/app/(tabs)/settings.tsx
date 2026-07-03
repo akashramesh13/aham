@@ -20,9 +20,10 @@ export default function Settings() {
           value={mode}
           onChange={setTheme}
           options={[
-            { value: "system", label: "Follow System Theme" },
+            { value: "system", label: "Follow System Theme (Light/Dark)" },
             { value: "light", label: "Light" },
             { value: "dark", label: "Dark" },
+            { value: "amoled", label: "Amoled" },
           ]}
         />
         <View style={styles.exportContainer}>

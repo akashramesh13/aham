@@ -1,11 +1,7 @@
 import { Theme } from "@/types/theme";
 import { Pressable, StyleSheet, Text } from "react-native";
 import useTheme from "../hooks/useTheme";
-
-type CustomButtonProps = {
-  value: string;
-  fontFamily?: string;
-};
+import { CustomButtonProps } from "@/types/customButton";
 
 export default function CustomButton({
   value,

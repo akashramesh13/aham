@@ -8,6 +8,4 @@ export interface JournalEntry {
   mood: MoodLabel | null;
   gratitude: string[];
   hoursOfSleep: number | null;
-  goals: string[];
-  todos: string[];
 }

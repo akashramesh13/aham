@@ -1,16 +1,6 @@
+import { Props } from "@/types/radioList";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import useTheme from "../hooks/useTheme";
-
-type Option<T extends string> = {
-  value: T;
-  label: string;
-};
-
-type Props<T extends string> = {
-  value: T;
-  onChange: (value: T) => void;
-  options: Option<T>[];
-};
 
 export default function RadioList<T extends string>({
   value,

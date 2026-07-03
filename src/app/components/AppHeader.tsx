@@ -2,11 +2,8 @@ import { Theme } from "@/types/theme";
 import { StyleSheet, Text, View } from "react-native";
 import useTheme from "../hooks/useTheme";
 import HamburgerMenu from "./HamburgerMenu";
+import { AppHeaderProps } from "@/types/appHeader";
 
-type AppHeaderProps = {
-  title: string;
-  showMenu?: boolean;
-};
 
 const AppHeader = ({ title, showMenu = false }: AppHeaderProps) => {
   const { theme } = useTheme();
