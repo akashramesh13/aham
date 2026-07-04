@@ -15,8 +15,11 @@ export default function HomeScreen() {
       <AppHeader title="अहम्" />
 
       <KeyboardAwareScrollView
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
         bottomOffset={24}
       >
         <TodayOverview />
@@ -34,5 +37,6 @@ const createStyles = (theme: Theme) =>
     content: {
       flexGrow: 1,
       paddingHorizontal: 20,
+      paddingBottom: 64,
     },
   });

@@ -14,7 +14,11 @@ export default function Settings() {
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
       <AppHeader title="Settings" />
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.content}
+      >
         <Text style={styles.heading}>Appearance</Text>
         <RadioList
           value={mode}
