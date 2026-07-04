@@ -9,7 +9,14 @@ const HoursOfSleepCard = ({ value, onChange }: HoursOfSleepCardProps) => {
   const styles = createStyles(theme);
   return (
     <View style={styles.sleepContainer}>
-      <Text style={styles.title}>Hours of Sleep</Text>
+      <Text
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        minimumFontScale={0.8}
+        style={styles.title}
+      >
+        Hours of Sleep
+      </Text>
       <CustomTextInput
         style={{ textAlign: "center", fontSize: 25 }}
         value={value?.toString() ?? ""}

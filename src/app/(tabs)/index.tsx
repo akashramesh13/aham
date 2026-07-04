@@ -1,5 +1,6 @@
 import { Theme } from "@/types/theme";
-import { ScrollView, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AppHeader from "../components/AppHeader";
 import TodayOverview from "../components/TodayOverview";
@@ -11,11 +12,15 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
-      <AppHeader title={"अहम्"} />
-      <ScrollView contentContainerStyle={styles.content}>
-        {/* <YesterdayOverview /> */}
+      <AppHeader title="अहम्" />
+
+      <KeyboardAwareScrollView
+        contentContainerStyle={styles.content}
+        keyboardShouldPersistTaps="handled"
+        bottomOffset={24}
+      >
         <TodayOverview />
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 }

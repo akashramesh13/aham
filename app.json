@@ -1,41 +1,50 @@
 {
   "expo": {
-    "name": "aham",
+    "name": "Aham",
     "slug": "aham",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/icon_splash.png",
     "scheme": "aham",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "bundleIdentifier": "com.sillycat.aham",
+      "supportsTablet": true
     },
     "android": {
+      "package": "com.sillycat.aham",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "foregroundImage": "./assets/icon_splash.png",
+        "backgroundColor": "#000000"
       },
-      "predictiveBackGestureEnabled": false
+      "softwareKeyboardLayoutMode": "pan",
+      "predictiveBackGestureEnabled": true
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/icon_splash.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
+          "backgroundColor": "#000000",
+          "image": "./assets/icon_splash.png",
+          "imageWidth": 192
+        }
+      ],
+      "expo-font",
+      [
+        "expo-build-properties",
+        {
           "android": {
-            "image": "./assets/images/splash-icon.png",
-            "imageWidth": 76
+            "enableShrinkResourcesInReleaseBuilds": true,
+            "enableProguardInReleaseBuilds": true
           }
         }
       ],
-      "expo-font"
+      "expo-sqlite"
     ],
     "experiments": {
       "typedRoutes": true,

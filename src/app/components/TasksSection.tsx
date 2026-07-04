@@ -24,11 +24,11 @@ const TasksSection = ({
   const inputRefs = useRef<(TextInput | null)[]>([]);
 
   const createEmptyTask = (): Task => ({
+    date: new Date().toISOString().slice(0, 10),
     title: "",
     completed: false,
-    createdAt: new Date().toISOString(),
+    createdAt: Date.now(),
   });
-
   return (
     <View style={styles.section}>
       <Text style={styles.title}>{title}</Text>

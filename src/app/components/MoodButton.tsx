@@ -1,6 +1,7 @@
 import { MoodButtonProps } from "@/types/moodButton";
 import { Theme } from "@/types/theme";
 import { Ionicons } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
 import { Pressable, StyleSheet, Text } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -26,28 +27,34 @@ export default function MoodButton({
     transform: [{ translateX: translateX.value }, { scale: scale.value }],
   }));
 
-  const handlePress = () => {
+  const handlePress = async () => {
     switch (mood.label) {
-      case "happy":
+      case "happy": {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
         scale.value = withSequence(withSpring(1.45), withSpring(1));
         break;
+      }
 
-      case "neutral":
+      case "neutral": {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         scale.value = withSequence(
-          withTiming(1.15, { duration: 100 }),
-          withTiming(1, { duration: 100 }),
+          withTiming(1.15, { duration: 500 }),
+          withTiming(1, { duration: 500 }),
         );
         break;
+      }
 
-      case "sad":
+      case "sad": {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
         translateX.value = withSequence(
-          withTiming(-4, { duration: 40 }),
-          withTiming(4, { duration: 40 }),
-          withTiming(-3, { duration: 40 }),
-          withTiming(3, { duration: 40 }),
-          withTiming(0, { duration: 40 }),
+          withTiming(-4, { duration: 65 }),
+          withTiming(4, { duration: 65 }),
+          withTiming(-3, { duration: 65 }),
+          withTiming(3, { duration: 65 }),
+          withTiming(0, { duration: 65 }),
         );
         break;
+      }
     }
 
     onPress();
