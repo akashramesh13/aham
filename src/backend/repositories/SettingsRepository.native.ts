@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 
-import { db } from "../database/client";
+import { db } from "../database/client.native";
 import { settings } from "../database/schema";
 
 export class SettingsRepository {

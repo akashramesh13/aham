@@ -1,6 +1,6 @@
 import { asc, eq } from "drizzle-orm";
 
-import { db } from "../database/client";
+import { db } from "../database/client.native";
 import { gratitude } from "../database/schema";
 
 export class GratitudeRepository {

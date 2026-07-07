@@ -1,11 +1,15 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { migrateDatabase } from "@/backend/database/migrate";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
+import { Platform } from "react-native";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+
+import LaunchScreen from "@/app/components/LaunchScreen";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -18,21 +22,32 @@ export default function RootLayout() {
   });
 
   const [databaseReady, setDatabaseReady] = useState(false);
+  const [showLaunch, setShowLaunch] = useState(true);
 
   useEffect(() => {
     async function init() {
-      console.log("Starting init...");
-      console.log("Fonts loaded:", loaded);
-
       try {
-        console.log("Running migrations...");
-        await migrateDatabase();
-        console.log("✅ DB Ready");
+        if (Platform.OS !== "web") {
+          console.log("Running migrations...");
+          await migrateDatabase();
+          console.log("✅ DB Ready");
+        }
+        if (showLaunch) {
+          return (
+            <LaunchScreen
+              onFinish={() => {
+                setShowLaunch(false);
+              }}
+            />
+          );
+        }
       } catch (e) {
         console.error("Migration failed:", e);
       } finally {
         console.log("Finishing init");
+
         setDatabaseReady(true);
+
         await SplashScreen.hideAsync();
       }
     }
@@ -41,9 +56,22 @@ export default function RootLayout() {
       init();
     }
   }, [loaded, error]);
+
   if (!loaded || !databaseReady) {
     return null;
   }
+
+  if (showLaunch) {
+    return (
+      <LaunchScreen
+        onFinish={async () => {
+          await AsyncStorage.setItem("hasSeenLaunch", "true");
+          setShowLaunch(false);
+        }}
+      />
+    );
+  }
+
   return (
     <SafeAreaProvider>
       <KeyboardProvider>

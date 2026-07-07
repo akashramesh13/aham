@@ -1,5 +1,3 @@
-import { db } from "../database/client";
-
 import { JournalRepository } from "../repositories/JournalRepository";
 import { TaskRepository } from "../repositories/TaskRepository";
 
@@ -13,11 +11,9 @@ export interface DailyJournal {
 
 export class JournalService {
   static async save(entry: JournalEntry, tasks: Task[]) {
-    await db.transaction(async () => {
-      await JournalRepository.save(entry);
+    await JournalRepository.save(entry);
 
-      await TaskRepository.saveAll(entry.date!, tasks);
-    });
+    await TaskRepository.saveAll(entry.date!, tasks);
   }
 
   static async load(date: string): Promise<DailyJournal> {
