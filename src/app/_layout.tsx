@@ -1,6 +1,6 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { migrateDatabase } from "@/backend/database/migrate";
 import { ThemeProvider } from "@/context/ThemeContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -21,43 +21,30 @@ export default function RootLayout() {
     "BodyFont-Bold": require("../../assets/fonts/LibreBaskerville/LibreBaskerville-Bold.ttf"),
   });
 
-  const [databaseReady, setDatabaseReady] = useState(false);
+  const [isReady, setIsReady] = useState(false);
   const [showLaunch, setShowLaunch] = useState(true);
 
   useEffect(() => {
-    async function init() {
+    async function prepareSystem() {
       try {
         if (Platform.OS !== "web") {
           console.log("Running migrations...");
           await migrateDatabase();
           console.log("✅ DB Ready");
         }
-        if (showLaunch) {
-          return (
-            <LaunchScreen
-              onFinish={() => {
-                setShowLaunch(false);
-              }}
-            />
-          );
-        }
       } catch (e) {
         console.error("Migration failed:", e);
       } finally {
-        console.log("Finishing init");
-
-        setDatabaseReady(true);
-
-        await SplashScreen.hideAsync();
+        setIsReady(true);
       }
     }
 
     if (loaded || error) {
-      init();
+      prepareSystem();
     }
   }, [loaded, error]);
 
-  if (!loaded || !databaseReady) {
+  if (!loaded || !isReady) {
     return null;
   }
 
