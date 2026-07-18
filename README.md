@@ -1,56 +1,104 @@
-# Welcome to your Expo app 👋
+# Aham (अहम्)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+> A private, offline-first journaling app built with React Native.
 
-## Get started
+Aham is a cross-platform journaling application designed around a simple idea:
 
-1. Install dependencies
+> **Your journal belongs to you.**
 
-   ```bash
-   npm install
-   ```
+No accounts. No subscriptions. No cloud sync. Just open the app and write.
 
-2. Start the app
+## Features
 
-   ```bash
-   npx expo start
-   ```
+- ✍️ Rich journaling experience
+- 📱 Android, iOS and Web support
+- 💾 Offline-first with local SQLite storage
+- 🔒 No accounts or authentication
+- ☁️ No cloud sync
+- 🌙 Light & Dark mode
+- ⚡ Built from a single React Native codebase
 
-In the output, you'll find options to open the app in a
+## Tech Stack
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- React Native
+- Expo
+- TypeScript
+- Expo Router
+- SQLite
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Running Locally
 
-## Get a fresh project
-
-When you're ready, run:
+Clone the repository.
 
 ```bash
-npm run reset-project
+git clone https://github.com/akashramesh13/aham.git
+
+cd aham
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Install dependencies.
 
-### Other setup steps
+```bash
+npm install
+```
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+Start the development server.
 
-## Learn more
+```bash
+npx expo start
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+Build for the web.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+npx expo export --platform web
+```
 
-## Join the community
+---
 
-Join our community of developers creating universal apps.
+## Philosophy
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Most journaling apps ask you to create an account before you've written a single word.
+
+Aham takes the opposite approach.
+
+- Your notes stay on your device.
+- The app works without an internet connection.
+- There are no subscriptions.
+- There are no ads.
+- There is no unnecessary complexity.
+
+Open the app.
+Write.
+Close it.
+
+---
+
+## Roadmap
+
+- [ ] Markdown support
+- [ ] Search improvements
+- [ ] Tags
+- [ ] Calendar view
+
+---
+
+## Download
+
+🌐 **Web:** https://aham.akashramesh.in
+
+📱 **Android APK:** https://www.akashramesh.in/assets/aham.apk
+
+---
+
+## Why "Aham"?
+
+**Aham (अहम्)** is a Sanskrit word meaning **"I"** or **"self."**
+
+Journaling is a conversation with yourself, so the name felt fitting.
+
+---
+
+## License
+
+MIT
