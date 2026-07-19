@@ -1,6 +1,6 @@
 import { CustomChecklistProps } from "@/types/customChecklist";
 import { Theme } from "@/types/theme";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { forwardRef } from "react";
 import { Pressable, StyleSheet, TextInput, View } from "react-native";
 import useTheme from "../hooks/useTheme";
@@ -11,7 +11,10 @@ const CustomChecklist = forwardRef<TextInput, CustomChecklistProps>(
     const { theme } = useTheme();
     const styles = createStyles(theme);
 
-    const iconName = checked ? "checkbox-marked" : "checkbox-blank-outline";
+    const iconName = checked ? "checkmark-circle" : "ellipse-outline";
+    const iconColor = checked 
+      ? theme.accent 
+      : theme.textSecondary;
 
     return (
       <View style={styles.container}>
@@ -23,11 +26,12 @@ const CustomChecklist = forwardRef<TextInput, CustomChecklistProps>(
             checked,
             disabled: value.trim().length === 0,
           }}
+          style={value.trim().length === 0 ? { opacity: 0.3 } : null}
         >
-          <MaterialCommunityIcons
+          <Ionicons
             name={iconName}
             size={24}
-            color={value.trim().length === 0 ? theme.textSecondary : theme.text}
+            color={iconColor}
           />
         </Pressable>
 
@@ -52,10 +56,12 @@ const createStyles = (theme: Theme) =>
     container: {
       flexDirection: "row",
       alignItems: "center",
-      gap: 8,
+      gap: 12,
+      width: "100%",
     },
 
     input: {
       flex: 1,
+      minWidth: 0,
     },
   });

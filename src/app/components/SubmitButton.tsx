@@ -43,7 +43,6 @@ const createStyles = (theme: Theme) =>
       color: theme.text,
       fontSize: 18,
       fontWeight: "600",
-      fontFamily: "BodyFont-Regular",
     },
     saveIcon: {
       fontSize: 50,

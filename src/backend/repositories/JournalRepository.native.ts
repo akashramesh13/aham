@@ -55,4 +55,9 @@ export class JournalRepository {
       hoursOfSleep: row.hoursOfSleep,
     };
   }
+
+  static async getAllDates(): Promise<string[]> {
+    const rows = await db.select({ date: journals.date }).from(journals);
+    return rows.map((r) => r.date);
+  }
 }

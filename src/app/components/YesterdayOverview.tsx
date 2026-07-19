@@ -33,13 +33,13 @@ const createStyles = (theme: Theme) =>
     },
     heading: {
       color: theme.text,
-      fontFamily: "BodyFont-Bold",
+      fontWeight: "600",
       fontSize: 18,
       marginBottom: 4,
     },
     text: {
       color: theme.textSecondary,
-      fontFamily: "BodyFont-Regular",
+      fontWeight: "400",
       fontSize: 15,
     },
   });

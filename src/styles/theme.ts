@@ -1,28 +1,25 @@
 import { Theme } from "@/types/theme";
 
 export const lightTheme: Theme = {
-  background: "#FAFAF9",
+  background: "#F5F5F7", // Apple-like subtle light gray
   surface: "#FFFFFF",
   surface2: "#F3F4F6",
-  text: "#1F2937",
-  textSecondary: "#6B7280",
-  border: "#E5E7EB",
+  text: "#1D1D1F", // Apple text color
+  textSecondary: "#86868B",
+  border: "#E5E5EA",
+  accent: "#EA580C",
+  glassBackground: "rgba(255, 255, 255, 0.35)",
+  glassBorder: "rgba(255, 255, 255, 0.5)",
 };
 
-export const darkTheme: Theme = {
-  background: "#0F1115",
-  surface: "#171A21",
-  surface2: "#22252D",
-  text: "#F3F4F6",
-  textSecondary: "#9CA3AF",
-  border: "#2F3540",
-};
-
-export const amoledTheme: Theme = {
+export const terminalTheme: Theme = {
   background: "#000000",
   surface: "#0A0A0A",
   surface2: "#151515",
-  text: "#FFFFFF",
-  textSecondary: "#9A9A9A",
-  border: "#262626",
+  text: "#E8E8E8",
+  textSecondary: "#A0A0A0",
+  border: "#222222",
+  accent: "#22C55E",
+  glassBackground: "rgba(10, 10, 10, 0.4)",
+  glassBorder: "rgba(255, 255, 255, 0.08)",
 };

@@ -1,6 +1,6 @@
 import { Theme } from "@/types/theme";
 import { forwardRef } from "react";
-import { StyleSheet, TextInput } from "react-native";
+import { StyleSheet, TextInput, Platform } from "react-native";
 import useTheme from "../hooks/useTheme";
 import { CustomTextInputProps } from "@/types/customTextInput";
 
@@ -17,7 +17,11 @@ const CustomTextInput = forwardRef<TextInput, CustomTextInputProps>(
         selectionColor={theme.text}
         placeholderTextColor={theme.textSecondary}
         underlineColorAndroid="transparent"
-        style={[styles.input, style]}
+        style={[
+          styles.input,
+          Platform.OS === "web" ? ({ outlineStyle: "none" } as any) : null,
+          style
+        ]}
         {...props}
       />
     );
@@ -32,7 +36,7 @@ const createStyles = (theme: Theme) =>
       color: theme.text,
       borderBottomWidth: 1,
       borderBottomColor: theme.text,
-      fontFamily: "BodyFont-Regular",
+      fontWeight: "400",
       fontSize: 16,
     },
   });

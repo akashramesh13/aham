@@ -32,7 +32,7 @@ export class TaskRepository {
       orderBy: [asc(tasks.position)],
     });
 
-    return rows.map((row) => ({
+    return rows.map((row: any) => ({
       id: row.id,
       date: row.date,
       title: row.text,

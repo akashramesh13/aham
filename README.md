@@ -1,21 +1,14 @@
 # Aham (अहम्)
 
-> A private, offline-first journaling app built with React Native.
+> A meticulously crafted, premium daily journaling app built with React Native and Expo. अहम् (Aham) brings you a breathtaking, minimal, and modern Apple-style interface with glassy aesthetics and fluid animations.
 
-Aham is a cross-platform journaling application designed around a simple idea:
+Your data is 100% yours. अहम् operates completely **offline and private**—your journal entries never leave your device unless you choose to export them.
 
-> **Your journal belongs to you.**
-
-No accounts. No subscriptions. No cloud sync. Just open the app and write.
-
-## Features
-
-- ✍️ Rich journaling experience
-- 📱 Android, iOS and Web support
-- 💾 Offline-first with local SQLite storage
-- 🔒 No accounts or authentication
-- ☁️ No cloud sync
-- 🌙 Light & Dark mode
+### Features
+- 🎨 **Minimal & Modern UI**: Sleek floating pill tabs, frosted glass panels, and typography-first layouts.
+- 🌙 **Multiple Themes**: From stunning Light Mode to pastel Catppuccin and deep Terminal Dark Mode.
+- 📱 **Cross-Platform**: Runs beautifully on iOS, Android, and Web with native-feeling aesthetics on every platform.
+- 🔒 **Private & Offline**: All your journal entries, moods, and sleep data are stored strictly on-device using local SQLite. No accounts, no cloud sync, complete privacy.
 - ⚡ Built from a single React Native codebase
 
 ## Tech Stack

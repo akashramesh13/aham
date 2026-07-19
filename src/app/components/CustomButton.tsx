@@ -6,7 +6,9 @@ import { CustomButtonProps } from "@/types/customButton";
 export default function CustomButton({
   value,
   fontFamily = "monospace",
-}: CustomButtonProps) {
+  onPress,
+  isLoading,
+}: CustomButtonProps & { onPress?: () => void; isLoading?: boolean }) {
   const { theme } = useTheme();
 
   const styles = createStyles(theme, fontFamily);
@@ -16,12 +18,14 @@ export default function CustomButton({
       style={({ pressed }) => [
         styles.button,
         {
-          backgroundColor: pressed ? theme.border : theme.text,
+          backgroundColor: theme.accent,
+          opacity: pressed || isLoading ? 0.7 : 1,
         },
       ]}
-      onPress={() => alert("Pressed")}
+      onPress={onPress}
+      disabled={isLoading}
     >
-      <Text style={styles.text}>{value}</Text>
+      <Text style={styles.text}>{isLoading ? "Exporting..." : value}</Text>
     </Pressable>
   );
 }

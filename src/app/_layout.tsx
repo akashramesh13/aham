@@ -8,25 +8,25 @@ import { useEffect, useState } from "react";
 import { Platform } from "react-native";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { NotificationService } from "@/backend/services/NotificationService";
 
 import LaunchScreen from "@/app/components/LaunchScreen";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const [loaded, error] = useFonts({
-    "TitleFont-Regular": require("../../assets/fonts/PlayfairDisplay/PlayfairDisplay-Regular.ttf"),
-    "TitleFont-Bold": require("../../assets/fonts/PlayfairDisplay/PlayfairDisplay-Bold.ttf"),
-    "BodyFont-Regular": require("../../assets/fonts/LibreBaskerville/LibreBaskerville-Regular.ttf"),
-    "BodyFont-Bold": require("../../assets/fonts/LibreBaskerville/LibreBaskerville-Bold.ttf"),
-  });
-
   const [isReady, setIsReady] = useState(false);
   const [showLaunch, setShowLaunch] = useState(true);
 
   useEffect(() => {
     async function prepareSystem() {
       try {
+        NotificationService.init();
+        const hasSeen = await AsyncStorage.getItem("hasSeenLaunch");
+        if (hasSeen === "true") {
+          setShowLaunch(false);
+        }
+
         if (Platform.OS !== "web") {
           console.log("Running migrations...");
           await migrateDatabase();
@@ -39,12 +39,10 @@ export default function RootLayout() {
       }
     }
 
-    if (loaded || error) {
-      prepareSystem();
-    }
-  }, [loaded, error]);
+    prepareSystem();
+  }, []);
 
-  if (!loaded || !isReady) {
+  if (!isReady) {
     return null;
   }
 
@@ -63,7 +61,7 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <KeyboardProvider>
         <ThemeProvider>
-          <Stack screenOptions={{ headerShown: false }}>
+          <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: 'transparent' } }}>
             <Stack.Screen name="(tabs)" />
           </Stack>
         </ThemeProvider>

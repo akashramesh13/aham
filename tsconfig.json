@@ -10,12 +10,21 @@
       "@/assets/*": [
         "./assets/*"
       ]
-    }
+    },
+    "moduleResolution": "bundler",
+    "moduleSuffixes": [".native", ".web", ""]
   },
   "include": [
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts"
-, "babel.config.js", "drizzle.config.js", "metro.config.js"  ]
+    "expo-env.d.ts",
+    "babel.config.js",
+    "drizzle.config.js",
+    "metro.config.js"
+  ],
+  "exclude": [
+    "example",
+    "node_modules"
+  ]
 }

@@ -1,30 +1,43 @@
 import { HoursOfSleepCardProps } from "@/types/hoursOfSleep";
 import { Theme } from "@/types/theme";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TextInput, Platform } from "react-native";
 import useTheme from "../hooks/useTheme";
-import CustomTextInput from "./CustomTextInput";
 
 const HoursOfSleepCard = ({ value, onChange }: HoursOfSleepCardProps) => {
   const { theme } = useTheme();
   const styles = createStyles(theme);
+
+  const handleChange = (text: string) => {
+    const cleaned = text.replace(/[^0-9]/g, "");
+    if (cleaned === "") {
+      onChange(null);
+      return;
+    }
+    const num = parseInt(cleaned, 10);
+    if (num >= 0 && num <= 24) {
+      onChange(num);
+    }
+  };
+
   return (
     <View style={styles.sleepContainer}>
-      <Text
-        numberOfLines={1}
-        adjustsFontSizeToFit
-        minimumFontScale={0.8}
-        style={styles.title}
-      >
-        Hours of Sleep
-      </Text>
-      <CustomTextInput
-        style={{ textAlign: "center", fontSize: 25 }}
-        value={value?.toString() ?? ""}
-        onChangeText={(text) => {
-          const cleaned = text.replace(/[^0-9.]/g, "");
-          onChange(cleaned === "" ? null : Number(cleaned));
-        }}
-      />
+      <Text style={styles.title}>Hours of Sleep</Text>
+      <View style={styles.inputWrapper}>
+        <TextInput
+          style={[
+            styles.input,
+            Platform.OS === "web" ? ({ outlineStyle: "none" } as any) : null,
+          ]}
+          keyboardType="numeric"
+          value={value === null || value === undefined ? "" : String(value)}
+          onChangeText={handleChange}
+          placeholder="8"
+          placeholderTextColor={theme.textSecondary}
+          selectionColor={theme.accent}
+          maxLength={2}
+          underlineColorAndroid="transparent"
+        />
+      </View>
     </View>
   );
 };
@@ -33,19 +46,40 @@ const createStyles = (theme: Theme) =>
   StyleSheet.create({
     sleepContainer: {
       flex: 1,
-      backgroundColor: theme.surface,
-      borderRadius: 16,
-      padding: 16,
       flexDirection: "column",
-      minHeight: 190,
+      alignItems: "center",
+      justifyContent: "center",
+      paddingVertical: 16,
     },
     title: {
-      fontSize: 18,
-      fontFamily: "BodyFont-Bold",
-      color: theme.text,
+      color: theme.textSecondary,
+      fontWeight: "600",
+      fontSize: 14,
+      textTransform: "uppercase",
+      letterSpacing: 1,
+      textAlign: "center",
+      marginBottom: 20,
+    },
+    inputWrapper: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
     },
     input: {
-      width: "100%",
+      fontSize: 48,
+      fontWeight: "800",
+      color: theme.text,
+      textAlign: "center",
+      minWidth: 64,
+      padding: 0,
+      margin: 0,
+    },
+    unit: {
+      fontSize: 20,
+      fontWeight: "600",
+      color: theme.textSecondary,
+      marginLeft: 4,
+      marginTop: 16,
     },
   });
 

@@ -1,5 +1,4 @@
 import { StyleSheet, Text, View } from "react-native";
-
 import { moods } from "@/constants/mood";
 import { MoodCardProps } from "@/types/mood";
 import { Theme } from "@/types/theme";
@@ -12,17 +11,17 @@ export default function MoodCard({ value, onChange }: MoodCardProps) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>How are you feeling today?</Text>
-
       <View style={styles.card}>
-        {moods.map((mood) => (
-          <MoodButton
-            key={mood.label}
-            mood={mood}
-            selected={value === mood.label}
-            onPress={() => onChange(mood.label)}
-          />
-        ))}
+        <View style={styles.buttonsRow}>
+          {moods.map((mood) => (
+            <MoodButton
+              key={mood.label}
+              mood={mood}
+              selected={value === mood.label}
+              onPress={() => onChange(mood.label)}
+            />
+          ))}
+        </View>
       </View>
     </View>
   );
@@ -31,24 +30,31 @@ export default function MoodCard({ value, onChange }: MoodCardProps) {
 const createStyles = (theme: Theme) =>
   StyleSheet.create({
     container: {
-      alignItems: "center",
-      marginTop: 25,
+      flex: 1,
     },
 
     title: {
       color: theme.text,
-      fontFamily: "BodyFont-Bold",
-      fontSize: 20,
+      fontWeight: "700",
+      fontSize: 16,
+      letterSpacing: -0.5,
+      textAlign: "center",
     },
 
     card: {
+      flex: 1,
+      padding: 16,
+      minHeight: 180,
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+
+    buttonsRow: {
       flexDirection: "row",
       justifyContent: "space-evenly",
       alignItems: "center",
       alignSelf: "stretch",
-      backgroundColor: theme.surface,
-      borderRadius: 12,
-      paddingVertical: 18,
-      marginTop: 16,
+      marginTop: 20,
     },
   });

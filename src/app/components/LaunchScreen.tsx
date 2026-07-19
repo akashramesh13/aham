@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 
 export default function LaunchScreen({ onFinish }: { onFinish: () => void }) {
-  const animationRef = useRef<LottieView>(null);
+  const animationRef = useRef<any>(null);
   const isWeb = Platform.OS === "web";
   const [isAnimationLayoutReady, setIsAnimationLayoutReady] = useState(isWeb);
 

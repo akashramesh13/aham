@@ -20,4 +20,11 @@ export class JournalRepository {
 
     return journals[date] ?? null;
   }
+
+  static async getAllDates(): Promise<string[]> {
+    const journals: Record<string, JournalEntry> = JSON.parse(
+      localStorage.getItem(KEY) ?? "{}",
+    );
+    return Object.keys(journals);
+  }
 }

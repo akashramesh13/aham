@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import useTheme from "../hooks/useTheme";
 import CustomChecklist from "./CustomChecklist";
+import GlassCard from "./GlassCard";
 
 type TasksSectionProps = {
   title: string;
@@ -42,7 +43,7 @@ const TasksSection = ({
               }}
               checked={task.completed}
               value={task.title}
-              placeholder={allowAdd ? "↵ to add more" : ""}
+              placeholder={allowAdd ? "Add a new task..." : ""}
               returnKeyType={
                 allowAdd && index === value.length - 1 ? "next" : "done"
               }
@@ -100,21 +101,20 @@ const TasksSection = ({
 const createStyles = (theme: Theme) =>
   StyleSheet.create({
     section: {
-      marginTop: 30,
+      marginTop: 32,
     },
 
     title: {
       color: theme.text,
-      fontFamily: "BodyFont-Bold",
+      fontWeight: "700",
       textAlign: "center",
-      fontSize: 25,
+      fontSize: 22,
+      letterSpacing: -0.5,
       marginBottom: 16,
     },
 
     container: {
-      backgroundColor: theme.surface,
-      borderRadius: 16,
-      padding: 16,
+      padding: 24,
       paddingBottom: 25,
     },
 

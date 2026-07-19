@@ -21,69 +21,42 @@ export default function MoodButton({
   const styles = createStyles(theme);
 
   const scale = useSharedValue(1);
-  const translateX = useSharedValue(0);
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: translateX.value }, { scale: scale.value }],
+    transform: [{ scale: scale.value }],
   }));
 
-  const handlePress = async () => {
-    switch (mood.label) {
-      case "happy": {
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-        scale.value = withSequence(withSpring(1.45), withSpring(1));
-        break;
-      }
+  const handlePressIn = () => {
+    scale.value = withSpring(0.92, { damping: 12, stiffness: 300 });
+  };
 
-      case "neutral": {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-        scale.value = withSequence(
-          withTiming(1.15, { duration: 500 }),
-          withTiming(1, { duration: 500 }),
-        );
-        break;
-      }
+  const handlePressOut = () => {
+    scale.value = withSpring(1, { damping: 10, stiffness: 250 });
+  };
 
-      case "sad": {
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-        translateX.value = withSequence(
-          withTiming(-4, { duration: 65 }),
-          withTiming(4, { duration: 65 }),
-          withTiming(-3, { duration: 65 }),
-          withTiming(3, { duration: 65 }),
-          withTiming(0, { duration: 65 }),
-        );
-        break;
-      }
-    }
-
+  const handlePress = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onPress();
   };
 
   return (
-    <Animated.View style={animatedStyle}>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={`Select ${mood.label} mood`}
-        accessibilityState={{ selected }}
-        onPress={handlePress}
-        style={({ pressed }) => [
-          styles.button,
-          selected && styles.selectedButton,
-          pressed && styles.pressedButton,
-        ]}
-      >
+    <Pressable
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      onPress={handlePress}
+      style={[styles.button, selected && styles.selected]}
+    >
+      <Animated.View style={[styles.iconContainer, animatedStyle]}>
         <Ionicons
           name={mood.icon}
-          size={30}
-          color={selected ? theme.background : theme.text}
+          size={32}
+          color={selected ? theme.accent : theme.textSecondary}
         />
-
-        <Text style={[styles.label, selected && styles.selectedLabel]}>
-          {mood.display}
-        </Text>
-      </Pressable>
-    </Animated.View>
+      </Animated.View>
+      <Text style={[styles.label, selected && styles.labelSelected]}>
+        {mood.label}
+      </Text>
+    </Pressable>
   );
 }
 
@@ -91,27 +64,24 @@ const createStyles = (theme: Theme) =>
   StyleSheet.create({
     button: {
       alignItems: "center",
-      paddingVertical: 8,
-      paddingHorizontal: 12,
-      borderRadius: 10,
+      justifyContent: "center",
+      padding: 12,
+      borderRadius: 16,
+      minWidth: 80,
     },
-
-    selectedButton: {
-      backgroundColor: theme.text,
+    selected: {
+      backgroundColor: theme.accent + "22",
     },
-
-    pressedButton: {
-      opacity: 0.75,
+    iconContainer: {
+      marginBottom: 8,
     },
-
     label: {
-      marginTop: 6,
-      color: theme.text,
-      fontFamily: "BodyFont-Regular",
       fontSize: 12,
+      color: theme.textSecondary,
+      fontWeight: "500",
     },
-
-    selectedLabel: {
-      color: theme.background,
+    labelSelected: {
+      color: theme.accent,
+      fontWeight: "700",
     },
   });

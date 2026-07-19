@@ -3,26 +3,16 @@ import { Tabs } from "expo-router";
 import { Platform, Pressable } from "react-native";
 import useTheme from "../hooks/useTheme";
 
+import CustomTabBar from "../components/CustomTabBar";
+
 export default function TabLayout() {
   const { theme } = useTheme();
 
   return (
     <Tabs
+      tabBar={(props) => <CustomTabBar {...props} />}
       screenOptions={{
         headerShown: false,
-        tabBarStyle: {
-          backgroundColor: theme.background,
-          borderTopColor: theme.border,
-        },
-        tabBarButton:
-          Platform.OS === "android"
-            ? (props) => {
-                const { ref, ...rest } = props as any;
-                return <Pressable {...rest} android_ripple={null} />;
-              }
-            : undefined,
-        tabBarActiveTintColor: theme.text,
-        tabBarInactiveTintColor: theme.textSecondary,
       }}
     >
       <Tabs.Screen
@@ -31,6 +21,15 @@ export default function TabLayout() {
           title: "Home",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="calendar"
+        options={{
+          title: "Calendar",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="calendar" size={size} color={color} />
           ),
         }}
       />

@@ -41,4 +41,19 @@ export class JournalService {
             ],
     };
   }
+
+  static async getAllDates(): Promise<string[]> {
+    return JournalRepository.getAllDates();
+  }
+
+  static async exportAllData(): Promise<string> {
+    const dates = await JournalRepository.getAllDates();
+    const data: Record<string, DailyJournal> = {};
+
+    for (const date of dates) {
+      data[date] = await JournalService.load(date);
+    }
+
+    return JSON.stringify(data, null, 2);
+  }
 }

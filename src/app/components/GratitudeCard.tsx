@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import useTheme from "../hooks/useTheme";
 import CustomTextInput from "./CustomTextInput";
+import GlassCard from "./GlassCard";
 
 const GratitudeCard = ({ gratitude, onChange }: GratitudeCardProps) => {
   const { theme } = useTheme();
@@ -13,7 +14,6 @@ const GratitudeCard = ({ gratitude, onChange }: GratitudeCardProps) => {
   return (
     <View style={styles.gratitudeContainer}>
       <Text style={styles.title}>Gratitude</Text>
-      {/* <Text style={styles.subtitle}>What are you grateful for today ?</Text> */}
       {gratitude.map((item, index) => (
         <View key={index} style={styles.row}>
           <CustomTextInput
@@ -22,17 +22,16 @@ const GratitudeCard = ({ gratitude, onChange }: GratitudeCardProps) => {
             }}
             style={styles.input}
             value={item}
-            placeholder={gratitude.length === 3 ? "" : "↵ to add more"}
+            placeholder="What are you grateful for today?"
             onChangeText={(text) => {
               const next = [...gratitude];
               next[index] = text;
               onChange(next);
             }}
-            returnKeyType={index === 3 ? "done" : "next"}
+            returnKeyType={index === gratitude.length - 1 ? "done" : "next"}
             onSubmitEditing={() => {
               if (
                 index === gratitude.length - 1 &&
-                gratitude.length < 3 &&
                 item.trim() !== ""
               ) {
                 onChange([...gratitude, ""]);
@@ -40,6 +39,8 @@ const GratitudeCard = ({ gratitude, onChange }: GratitudeCardProps) => {
                 requestAnimationFrame(() => {
                   inputRefs.current[index + 1]?.focus();
                 });
+              } else if (index < gratitude.length - 1) {
+                inputRefs.current[index + 1]?.focus();
               }
             }}
           />
@@ -67,24 +68,16 @@ const GratitudeCard = ({ gratitude, onChange }: GratitudeCardProps) => {
 const createStyles = (theme: Theme) =>
   StyleSheet.create({
     gratitudeContainer: {
-      flex: 1,
-      backgroundColor: theme.surface,
-      borderRadius: 16,
-      padding: 16,
-      minHeight: 190,
+      padding: 24,
     },
     title: {
       alignSelf: "center",
       color: theme.text,
-      fontFamily: "BodyFont-Bold",
-      fontSize: 20,
+      fontWeight: "700",
+      fontSize: 22,
+      letterSpacing: -0.5,
+      marginBottom: 12,
     },
-    // subtitle: {
-    //   alignSelf: "center",
-    //   color: theme.text,
-    //   fontFamily: "BodyFont-Regular",
-    //   fontSize: 15,
-    // },
     row: {
       flexDirection: "row",
       alignItems: "center",
