@@ -1,16 +1,16 @@
-import { useEffect, useState, useCallback } from "react";
-import { StyleSheet, View, Text, Pressable } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Calendar } from "react-native-calendars";
-import { router, useFocusEffect } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { router, useFocusEffect } from "expo-router";
+import { useCallback, useState } from "react";
+import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import { Calendar } from "react-native-calendars";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import AppHeader from "../components/AppHeader";
-import useTheme from "../hooks/useTheme";
-import { Theme } from "@/types/theme";
 import { JournalService } from "@/backend/services/JournalService";
+import { Theme } from "@/types/theme";
 import AmbientBackground from "../components/AmbientBackground";
+import AppHeader from "../components/AppHeader";
 import MonthYearPicker from "../components/MonthYearPicker";
+import useTheme from "../hooks/useTheme";
 
 export default function CalendarScreen() {
   const { theme, mode } = useTheme();
@@ -19,7 +19,7 @@ export default function CalendarScreen() {
   const [markedDates, setMarkedDates] = useState<Record<string, any>>({});
   const [isPickerVisible, setIsPickerVisible] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date().toISOString().slice(0, 10));
-  
+
   const today = new Date().toISOString().slice(0, 10);
 
   useFocusEffect(
@@ -56,10 +56,22 @@ export default function CalendarScreen() {
       <AppHeader title="Calendar" />
 
       <View style={styles.content}>
+        {Platform.OS === "web" && (
+          <style type="text/css">{`
+            [data-testid^="aham_calendar.day_"]:hover [data-testid$=".text"] {
+              background-color: ${theme.glassBackground} !important;
+            }
+            [data-testid^="aham_calendar.day_"] {
+              transition: opacity 0.2s;
+            }
+          `}</style>
+        )}
         <Calendar
-          key={currentMonth}
+          testID="aham_calendar"
+          key={currentMonth + mode}
           current={currentMonth}
           maxDate={today}
+          hideExtraDays={true}
           onMonthChange={(month: any) => setCurrentMonth(month.dateString)}
           renderHeader={renderCustomHeader}
           style={styles.calendar}
@@ -67,30 +79,92 @@ export default function CalendarScreen() {
             backgroundColor: "transparent",
             calendarBackground: "transparent",
             textSectionTitleColor: theme.textSecondary,
-            selectedDayBackgroundColor: theme.accent,
-            selectedDayTextColor: theme.background,
-            todayTextColor: theme.accent,
+            selectedDayBackgroundColor: "transparent", // Stop applying background to base
+            selectedDayTextColor: theme.accent, // Fix: Text should be accent colored, not background colored!
+            todayTextColor: theme.today,
             dayTextColor: theme.text,
             textDisabledColor: theme.textSecondary,
             dotColor: theme.accent,
-            selectedDotColor: theme.background,
+            selectedDotColor: theme.accent, // Dot is always outside the green circle now
             arrowColor: theme.text,
             monthTextColor: theme.text,
             textDayFontWeight: "500",
             textMonthFontWeight: "800",
             textDayHeaderFontWeight: "700",
-            textDayFontSize: 18,
-            textMonthFontSize: 22,
-            textDayFontFamily: "TitleFont-Medium",
-            textMonthFontFamily: "TitleFont-Bold",
-            textDayHeaderFontFamily: "TitleFont-Medium",
+            textDayFontSize: 20,
+            textMonthFontSize: 24,
+            textDayFontFamily: "CalendarFont-Medium",
+            textMonthFontFamily: "CalendarFont-Bold",
+            textDayHeaderFontFamily: "CalendarFont-Medium",
+            weekVerticalMargin: 12, // Lowered slightly since base dynamically wraps both text and dot now
+
+            // Force these to ensure react-native-calendars doesn't default to #2d4150
+            stylesheet: {
+              day: {
+                basic: {
+                  base: {
+                    width: 56,
+                    alignItems: 'center',
+                    justifyContent: 'flex-start',
+                    backgroundColor: 'transparent'
+                  },
+                  text: {
+                    width: 56,
+                    height: 56,
+                    textAlign: 'center',
+                    textAlignVertical: 'center',
+                    lineHeight: Platform.OS === 'ios' ? 56 : undefined,
+                    fontSize: 20,
+                    fontFamily: "CalendarFont-Medium",
+                    fontWeight: '500',
+                    color: theme.text,
+                    backgroundColor: 'transparent',
+                    borderRadius: 28,
+                    overflow: 'hidden',
+                    marginTop: 0
+                  },
+                  selected: {
+                    backgroundColor: 'transparent',
+                    borderRadius: 0
+                  },
+                  today: {
+                    backgroundColor: 'transparent',
+                    borderRadius: 0
+                  },
+                  selectedText: {
+                    color: theme.accent,
+                    backgroundColor: 'transparent'
+                  },
+                  todayText: {
+                    color: theme.textSecondary,
+                    backgroundColor: 'transparent'
+                  },
+                  disabledText: {
+                    color: theme.textSecondary
+                  },
+                  dot: {
+                    width: 6,
+                    height: 6,
+                    borderRadius: 3,
+                    opacity: 0,
+                    marginTop: 8 // Native flex margin below the 56x56 text circle
+                  },
+                  visibleDot: {
+                    opacity: 1,
+                    backgroundColor: theme.accent
+                  },
+                  selectedDot: {
+                    backgroundColor: theme.accent
+                  }
+                }
+              }
+            }
           }}
           markedDates={{
             ...markedDates,
             [today]: {
               ...markedDates[today],
               selected: true,
-              selectedColor: theme.accent + "40",
             },
           }}
           onDayPress={(day: any) => {

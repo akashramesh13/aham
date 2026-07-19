@@ -56,7 +56,7 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "db:migrate": "drizzle-kit migrate",
-    "build:web": "expo export -p web",
+    "build:web": "expo export -p web && cp dist/index.html dist/404.html",
     "build:android": "eas build -p android --profile production",
     "build:android:local": "eas build -p android --profile production --local",
     "release": "node scripts/release.mjs"

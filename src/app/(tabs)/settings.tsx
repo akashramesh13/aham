@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { writeAsStringAsync, documentDirectory, EncodingType } from "expo-file-system/legacy";
 import * as Sharing from "expo-sharing";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import AppHeader from "../components/AppHeader";
 import CustomButton from "../components/CustomButton";
@@ -21,19 +22,37 @@ export default function Settings() {
   const [reminderEnabled, setReminderEnabled] = useState(false);
   const [reminderTime, setReminderTime] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
+  
+  const [showLaunchAlways, setShowLaunchAlways] = useState(false);
 
   useEffect(() => {
-    if (Platform.OS === "web") return;
-    const loadReminders = async () => {
-      const enabled = await NotificationService.isReminderEnabled();
-      setReminderEnabled(enabled);
-      const { hour, minute } = await NotificationService.getReminderTime();
-      const d = new Date();
-      d.setHours(hour, minute, 0, 0);
-      setReminderTime(d);
+    const loadSettings = async () => {
+      // Reminders
+      if (Platform.OS !== "web") {
+        const enabled = await NotificationService.isReminderEnabled();
+        setReminderEnabled(enabled);
+        const { hour, minute } = await NotificationService.getReminderTime();
+        const d = new Date();
+        d.setHours(hour, minute, 0, 0);
+        setReminderTime(d);
+      }
+      
+      // Launch Animation
+      const launchSetting = await AsyncStorage.getItem("showLaunchAlways");
+      setShowLaunchAlways(launchSetting === "true");
     };
-    loadReminders();
+    loadSettings();
   }, []);
+
+  const toggleLaunchAlways = async (val: boolean) => {
+    setShowLaunchAlways(val);
+    await AsyncStorage.setItem("showLaunchAlways", String(val));
+    if (val) {
+      // If they enable 'Always Show', we should clear the 'hasSeen' flag 
+      // just to be safe, though the layout logic will handle it primarily.
+      await AsyncStorage.removeItem("hasSeenLaunch");
+    }
+  };
 
   const toggleReminder = async (val: boolean) => {
     setReminderEnabled(val);
@@ -115,6 +134,24 @@ export default function Settings() {
               { value: "terminal", label: "Terminal (Dark)" },
             ]}
           />
+          <View style={[styles.row, { marginTop: 16, flexDirection: 'column', alignItems: 'flex-start', gap: 12 }]}>
+            <Text style={[styles.label, { fontSize: 18, marginBottom: 0 }]}>Always Show Intro Animation</Text>
+            <View style={{
+              borderWidth: 2,
+              borderColor: theme.accent,
+              borderRadius: 16,
+              padding: 2,
+              backgroundColor: theme.glassBackground,
+              alignSelf: 'flex-start'
+            }}>
+              <Switch
+                value={showLaunchAlways}
+                onValueChange={toggleLaunchAlways}
+                trackColor={{ true: theme.accent, false: 'transparent' }}
+                thumbColor={theme.text}
+              />
+            </View>
+          </View>
         </View>
 
         {Platform.OS !== "web" && (

@@ -18,13 +18,27 @@ export default function RootLayout() {
   const [isReady, setIsReady] = useState(false);
   const [showLaunch, setShowLaunch] = useState(true);
 
+  const [loaded] = useFonts({
+    "TitleFont-Bold": require("../../assets/fonts/Inter/Inter-Bold.ttf"),
+    "TitleFont-Medium": require("../../assets/fonts/Inter/Inter-Medium.ttf"),
+    "TitleFont-Regular": require("../../assets/fonts/Inter/Inter-Regular.ttf"),
+    "CalendarFont-Bold": require("../../assets/fonts/Inter/Inter-Bold.ttf"),
+    "CalendarFont-Medium": require("../../assets/fonts/Inter/Inter-Medium.ttf"),
+    "CalendarFont-Regular": require("../../assets/fonts/Inter/Inter-Regular.ttf"),
+  });
+
   useEffect(() => {
     async function prepareSystem() {
       try {
         NotificationService.init();
-        const hasSeen = await AsyncStorage.getItem("hasSeenLaunch");
-        if (hasSeen === "true") {
-          setShowLaunch(false);
+        const showLaunchAlways = await AsyncStorage.getItem("showLaunchAlways");
+        if (showLaunchAlways === "true") {
+          setShowLaunch(true);
+        } else {
+          const hasSeen = await AsyncStorage.getItem("hasSeenLaunch");
+          if (hasSeen === "true") {
+            setShowLaunch(false);
+          }
         }
 
         if (Platform.OS !== "web") {
@@ -42,7 +56,13 @@ export default function RootLayout() {
     prepareSystem();
   }, []);
 
-  if (!isReady) {
+  useEffect(() => {
+    if (loaded && isReady && !showLaunch) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded, isReady, showLaunch]);
+
+  if (!isReady || !loaded) {
     return null;
   }
 

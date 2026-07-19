@@ -8,6 +8,7 @@ export type Theme = {
   textSecondary: string;
   border: string;
   accent: string;
+  today: string;
   glassBackground: string;
   glassBorder: string;
 };
