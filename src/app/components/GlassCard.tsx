@@ -7,26 +7,39 @@ interface GlassCardProps extends ViewProps {
 }
 
 export default function GlassCard({
-  style,
   children,
+  style,
   intensity = 40,
   ...rest
 }: GlassCardProps) {
-  const { theme, mode } = useTheme();
+  const { theme } = useTheme();
+
+  const isLight = theme.background === "#F5F5F7";
+
+  const cardStyle = [
+    styles.card,
+    {
+      backgroundColor: Platform.OS === "web" ? theme.glassBackground : "transparent",
+      borderColor: theme.glassBorder,
+
+      shadowColor: isLight ? "#88A1B5" : "#000000",
+      shadowOffset: { width: 0, height: 16 },
+      shadowOpacity: isLight ? 0.08 : 0.4,
+      shadowRadius: 32,
+      elevation: isLight ? 8 : 12,
+    },
+    style,
+  ];
 
   if (Platform.OS === "web") {
     return (
       <View
         style={[
-          styles.card,
+          cardStyle,
           {
-            backgroundColor: theme.glassBackground,
-            borderColor: theme.glassBorder,
-            boxShadow: "0 8px 32px rgba(0,0,0,0.08)",
-            backdropFilter: `blur(${intensity / 2}px)`,
-            WebkitBackdropFilter: `blur(${intensity / 2}px)`,
+            backdropFilter: `blur(${intensity}px) saturate(200%)`,
+            WebkitBackdropFilter: `blur(${intensity}px) saturate(200%)`,
           } as any,
-          style,
         ]}
         {...rest}
       >
@@ -37,21 +50,9 @@ export default function GlassCard({
 
   return (
     <BlurView
-      intensity={mode === "light" ? intensity : intensity / 2}
-      tint={"default" as any}
-      style={[
-        styles.card,
-        {
-          backgroundColor: theme.glassBackground,
-          borderColor: theme.glassBorder,
-          shadowColor: "#000",
-          shadowOffset: { width: 0, height: 8 },
-          shadowOpacity: 0.1,
-          shadowRadius: 16,
-          elevation: 5,
-        },
-        style,
-      ]}
+      tint={isLight ? "light" : "dark"}
+      intensity={intensity}
+      style={cardStyle}
       {...rest}
     >
       {children}
@@ -61,8 +62,9 @@ export default function GlassCard({
 
 const styles = StyleSheet.create({
   card: {
-    borderWidth: 1,
-    borderRadius: 24,
     overflow: "hidden",
+    borderRadius: 24,
+    borderWidth: 1.5,
+    padding: 18,
   },
 });

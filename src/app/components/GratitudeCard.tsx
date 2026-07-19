@@ -3,17 +3,38 @@ import { Theme } from "@/types/theme";
 import { Ionicons } from "@expo/vector-icons";
 import { useRef } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+
 import useTheme from "../hooks/useTheme";
 import CustomTextInput from "./CustomTextInput";
 import GlassCard from "./GlassCard";
 
-const GratitudeCard = ({ gratitude, onChange }: GratitudeCardProps) => {
+export default function GratitudeCard({
+  gratitude,
+  onChange,
+}: GratitudeCardProps) {
   const { theme } = useTheme();
   const styles = createStyles(theme);
+
   const inputRefs = useRef<(TextInput | null)[]>([]);
+
+  const addGratitude = () => {
+    // Don't create multiple empty rows.
+    if (gratitude.at(-1)?.trim() === "") {
+      inputRefs.current[gratitude.length - 1]?.focus();
+      return;
+    }
+
+    onChange([...gratitude, ""]);
+
+    requestAnimationFrame(() => {
+      inputRefs.current[gratitude.length]?.focus();
+    });
+  };
+
   return (
-    <View style={styles.gratitudeContainer}>
+    <GlassCard style={styles.card}>
       <Text style={styles.title}>Gratitude</Text>
+
       {gratitude.map((item, index) => (
         <View key={index} style={styles.row}>
           <CustomTextInput
@@ -30,16 +51,7 @@ const GratitudeCard = ({ gratitude, onChange }: GratitudeCardProps) => {
             }}
             returnKeyType={index === gratitude.length - 1 ? "done" : "next"}
             onSubmitEditing={() => {
-              if (
-                index === gratitude.length - 1 &&
-                item.trim() !== ""
-              ) {
-                onChange([...gratitude, ""]);
-
-                requestAnimationFrame(() => {
-                  inputRefs.current[index + 1]?.focus();
-                });
-              } else if (index < gratitude.length - 1) {
+              if (index < gratitude.length - 1) {
                 inputRefs.current[index + 1]?.focus();
               }
             }}
@@ -47,13 +59,16 @@ const GratitudeCard = ({ gratitude, onChange }: GratitudeCardProps) => {
 
           {gratitude.length > 1 && (
             <Pressable
+              style={styles.deleteButton}
               onPress={() => {
-                onChange(gratitude.filter((_, i) => i !== index));
+                const next = gratitude.filter((_, i) => i !== index);
+
+                // Always keep at least one empty field.
+                onChange(next.length === 0 ? [""] : next);
               }}
             >
               <Ionicons
-                style={styles.deleteButton}
-                name="close-circle-outline"
+                name="close-circle"
                 size={20}
                 color={theme.textSecondary}
               />
@@ -61,34 +76,71 @@ const GratitudeCard = ({ gratitude, onChange }: GratitudeCardProps) => {
           )}
         </View>
       ))}
-    </View>
+
+      <Pressable
+        style={({ pressed }) => [styles.addButton, pressed && styles.pressed]}
+        onPress={addGratitude}
+      >
+        <Ionicons name="add-circle-outline" size={18} color={theme.accent} />
+
+        <Text style={styles.addButtonText}>Add another</Text>
+      </Pressable>
+    </GlassCard>
   );
-};
+}
 
 const createStyles = (theme: Theme) =>
   StyleSheet.create({
-    gratitudeContainer: {
-      padding: 24,
+    card: {
+      marginBottom: 20,
     },
+
     title: {
-      alignSelf: "center",
-      color: theme.text,
+      color: theme.textSecondary,
+      fontSize: 13,
       fontWeight: "700",
-      fontSize: 22,
-      letterSpacing: -0.5,
-      marginBottom: 12,
+      textTransform: "uppercase",
+      letterSpacing: 1,
+      textAlign: "center",
+      marginBottom: 20,
     },
+
     row: {
       flexDirection: "row",
       alignItems: "center",
-      gap: 12,
+      marginBottom: 12,
     },
+
     input: {
       flex: 1,
     },
+
     deleteButton: {
-      padding: 6,
+      marginLeft: 12,
+      padding: 4,
+    },
+
+    addButton: {
+      marginTop: 8,
+      alignSelf: "center",
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      paddingHorizontal: 14,
+      paddingVertical: 8,
+      borderRadius: 18,
+      backgroundColor: theme.accent + "12",
+    },
+
+    addButtonText: {
+      marginLeft: 6,
+      color: theme.accent,
+      fontSize: 15,
+      fontWeight: "600",
+    },
+
+    pressed: {
+      opacity: 0.7,
+      transform: [{ scale: 0.97 }],
     },
   });
-
-export default GratitudeCard;

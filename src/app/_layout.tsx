@@ -8,7 +8,8 @@ import { useEffect, useState } from "react";
 import { Platform } from "react-native";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { NotificationService } from "@/backend/services/NotificationService";
+import { StatusBar } from "expo-status-bar";
+// import { NotificationService } from "@/backend/services/NotificationService";
 
 import LaunchScreen from "@/app/components/LaunchScreen";
 
@@ -30,7 +31,7 @@ export default function RootLayout() {
   useEffect(() => {
     async function prepareSystem() {
       try {
-        NotificationService.init();
+        // NotificationService.init();
         const showLaunchAlways = await AsyncStorage.getItem("showLaunchAlways");
         if (showLaunchAlways === "true") {
           setShowLaunch(true);
@@ -81,6 +82,7 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <KeyboardProvider>
         <ThemeProvider>
+          <StatusBar hidden />
           <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: 'transparent' } }}>
             <Stack.Screen name="(tabs)" />
           </Stack>

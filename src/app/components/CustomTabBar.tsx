@@ -55,9 +55,9 @@ export default function CustomTabBar({ state, descriptors, navigation }: any) {
             });
           };
 
-          let iconName: keyof typeof Ionicons.glyphMap = "home-outline";
-          if (route.name === "calendar") iconName = "calendar-outline";
-          else if (route.name === "settings") iconName = "options-outline";
+          let iconName: keyof typeof Ionicons.glyphMap = isFocused ? "home" : "home-outline";
+          if (route.name === "calendar") iconName = isFocused ? "calendar" : "calendar-outline";
+          else if (route.name === "settings") iconName = isFocused ? "options" : "options-outline";
 
           return (
             <Pressable

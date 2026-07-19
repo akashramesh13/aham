@@ -2,6 +2,7 @@ import { JournalService } from "@/backend/services/JournalService";
 import { JournalEntry } from "@/types/journal";
 import { Task } from "@/types/tasks";
 import { Theme } from "@/types/theme";
+import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useRef, useState } from "react";
 import {
   Alert,
@@ -12,13 +13,11 @@ import {
   Text,
   View,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 
 import useTheme from "../hooks/useTheme";
 
 import GratitudeCard from "./GratitudeCard";
 import HoursOfSleepCard from "./HoursOfSleepCard";
-import GlassCard from "./GlassCard";
 import MoodCard from "./MoodCard";
 import TasksCard from "./TasksCard";
 
@@ -51,14 +50,14 @@ const formatDate = (date: string) =>
     month: "long",
   });
 
-import { useLocalSearchParams, router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 
-export default function TodayOverview({ 
-  isEditingPast, 
-  setIsEditingPast 
-}: { 
-  isEditingPast?: boolean; 
-  setIsEditingPast?: (v: boolean) => void; 
+export default function TodayOverview({
+  isEditingPast,
+  setIsEditingPast,
+}: {
+  isEditingPast?: boolean;
+  setIsEditingPast?: (v: boolean) => void;
 } = {}) {
   const { theme } = useTheme();
   const styles = createStyles(theme);
@@ -190,7 +189,10 @@ export default function TodayOverview({
         <View style={styles.left}>
           <Pressable
             onPress={() => changeDay(-1)}
-            style={({ pressed }) => [styles.iconButton, pressed && styles.pressed]}
+            style={({ pressed }) => [
+              styles.iconButton,
+              pressed && styles.pressed,
+            ]}
           >
             <Ionicons name="chevron-back" size={24} color={theme.text} />
           </Pressable>
@@ -201,7 +203,13 @@ export default function TodayOverview({
           onPress={() => router.push("/(tabs)/calendar")}
         >
           <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
-            {isReadOnly && <Ionicons name="lock-closed" size={14} color={theme.textSecondary} />}
+            {isReadOnly && (
+              <Ionicons
+                name="lock-closed"
+                size={14}
+                color={theme.textSecondary}
+              />
+            )}
             <Text style={styles.title}>Journal</Text>
           </View>
 
@@ -216,7 +224,10 @@ export default function TodayOverview({
           {selectedDate !== today ? (
             <Pressable
               onPress={goToToday}
-              style={({ pressed }) => [styles.todayButton, pressed && styles.pressed]}
+              style={({ pressed }) => [
+                styles.todayButton,
+                pressed && styles.pressed,
+              ]}
             >
               <Text style={styles.todayButtonText}>Today</Text>
             </Pressable>
@@ -225,41 +236,42 @@ export default function TodayOverview({
           )}
         </View>
       </View>
-
-      <View pointerEvents={isReadOnly ? "none" : "auto"} style={{ opacity: isReadOnly ? 0.7 : 1 }}>
+      <View
+        pointerEvents={isReadOnly ? "none" : "auto"}
+        style={{ opacity: isReadOnly ? 0.7 : 1 }}
+      >
         <Text style={styles.sectionTitle}>Daily Check-in</Text>
-        <GlassCard style={styles.topRowCard}>
-          <View style={styles.topRow}>
-            <View style={styles.gridCol}>
-              <MoodCard
-                value={entry.mood}
-                onChange={(mood) => {
-                  setDirty(true);
-                  setEntry((prev) => ({
-                    ...prev,
-                    mood,
-                  }));
-                }}
-              />
-            </View>
 
-            <View style={styles.gridCol}>
-              <HoursOfSleepCard
-                value={entry.hoursOfSleep}
-                onChange={(hoursOfSleep) => {
-                  setDirty(true);
-                  setEntry((prev) => ({
-                    ...prev,
-                    hoursOfSleep,
-                  }));
-                }}
-              />
-            </View>
+        <View style={styles.topRow}>
+          <View style={styles.gridCol}>
+            <MoodCard
+              value={entry.mood}
+              onChange={(mood) => {
+                setDirty(true);
+                setEntry((prev) => ({
+                  ...prev,
+                  mood,
+                }));
+              }}
+            />
           </View>
-        </GlassCard>
 
-      <Text style={styles.sectionTitle}>Reflection & Tasks</Text>
-      <GlassCard style={styles.bottomRowCard}>
+          <View style={styles.gridCol}>
+            <HoursOfSleepCard
+              value={entry.hoursOfSleep}
+              onChange={(hoursOfSleep) => {
+                setDirty(true);
+                setEntry((prev) => ({
+                  ...prev,
+                  hoursOfSleep,
+                }));
+              }}
+            />
+          </View>
+        </View>
+
+        <Text style={styles.sectionTitle}>Reflection</Text>
+
         <GratitudeCard
           gratitude={entry.gratitude}
           onChange={(gratitude) => {
@@ -271,7 +283,7 @@ export default function TodayOverview({
           }}
         />
 
-        <View style={styles.horizontalDivider} />
+        <Text style={styles.sectionTitle}>Tasks</Text>
 
         <TasksCard
           todayTasks={tasks}
@@ -282,7 +294,6 @@ export default function TodayOverview({
           carriedOverTasks={carriedOverTasks}
           onCarriedOverTasksChange={setCarriedOverTasks}
         />
-      </GlassCard>
       </View>
     </View>
   );
@@ -365,45 +376,19 @@ const createStyles = (theme: Theme) =>
     sectionTitle: {
       color: theme.text,
       fontWeight: "700",
-      fontSize: 20,
+      fontSize: 22,
       marginTop: 32,
+      marginBottom: 16,
       marginLeft: 4,
       letterSpacing: -0.5,
     },
-    topRowCard: {
-      marginTop: 24,
-      marginBottom: 24,
-    },
-    bottomRowCard: {
-      marginTop: 24,
-      marginBottom: 48,
-    },
-    floatingEditButton: {
-      position: "absolute",
-      bottom: 24,
-      right: 24,
-      width: 56,
-      height: 56,
-      borderRadius: 28,
-      backgroundColor: theme.accent,
-      alignItems: "center",
-      justifyContent: "center",
-      shadowColor: theme.accent,
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.4,
-      shadowRadius: 8,
-      elevation: 6,
-    },
     topRow: {
-      flexDirection: "row",
-      alignItems: "stretch",
+      flexDirection: "column",
+      gap: 16,
+      marginTop: 16,
+      marginBottom: 8,
     },
-    horizontalDivider: {
-      height: 1,
-      backgroundColor: theme.glassBorder,
-      marginHorizontal: 16,
-      marginVertical: 16,
-    },
+
     gridCol: {
       flex: 1,
     },

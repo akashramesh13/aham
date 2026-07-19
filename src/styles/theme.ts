@@ -1,15 +1,20 @@
 import { Theme } from "@/types/theme";
 
 export const lightTheme: Theme = {
-  background: "#F5F5F7", // Apple-like subtle light gray
+  background: "#F5F5F7",
   surface: "#FFFFFF",
-  surface2: "#F3F4F6",
-  text: "#1D1D1F", // Apple text color
+  surface2: "#F8F8FA",
+
+  text: "#1D1D1F",
   textSecondary: "#86868B",
+
   border: "#E5E5EA",
+
   accent: "#EA580C",
-  glassBackground: "rgba(255, 255, 255, 0.35)",
-  glassBorder: "rgba(255, 255, 255, 0.5)",
+  today: "#000000",
+
+  glassBackground: "rgba(255, 255, 255, 0.15)",
+  glassBorder: "rgba(255, 255, 255, 0.4)",
 };
 
 export const terminalTheme: Theme = {
@@ -20,6 +25,7 @@ export const terminalTheme: Theme = {
   textSecondary: "#A0A0A0",
   border: "#222222",
   accent: "#22C55E",
-  glassBackground: "rgba(10, 10, 10, 0.4)",
-  glassBorder: "rgba(255, 255, 255, 0.08)",
+  today: "#FFFFFF",
+  glassBackground: "rgba(30, 30, 30, 0.2)",
+  glassBorder: "rgba(255, 255, 255, 0.15)",
 };

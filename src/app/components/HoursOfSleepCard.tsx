@@ -1,7 +1,17 @@
 import { HoursOfSleepCardProps } from "@/types/hoursOfSleep";
 import { Theme } from "@/types/theme";
-import { StyleSheet, Text, View, TextInput, Platform } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import {
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+
 import useTheme from "../hooks/useTheme";
+import GlassCard from "./GlassCard";
 
 const HoursOfSleepCard = ({ value, onChange }: HoursOfSleepCardProps) => {
   const { theme } = useTheme();
@@ -9,77 +19,107 @@ const HoursOfSleepCard = ({ value, onChange }: HoursOfSleepCardProps) => {
 
   const handleChange = (text: string) => {
     const cleaned = text.replace(/[^0-9]/g, "");
+
     if (cleaned === "") {
       onChange(null);
       return;
     }
+
     const num = parseInt(cleaned, 10);
+
     if (num >= 0 && num <= 24) {
       onChange(num);
     }
   };
 
+  const adjust = (delta: number) => {
+    const current = value ?? 0;
+    const next = Math.max(0, Math.min(24, current + delta));
+    onChange(next);
+  };
+
   return (
-    <View style={styles.sleepContainer}>
+    <GlassCard>
       <Text style={styles.title}>Hours of Sleep</Text>
-      <View style={styles.inputWrapper}>
-        <TextInput
-          style={[
-            styles.input,
-            Platform.OS === "web" ? ({ outlineStyle: "none" } as any) : null,
-          ]}
-          keyboardType="numeric"
-          value={value === null || value === undefined ? "" : String(value)}
-          onChangeText={handleChange}
-          placeholder="8"
-          placeholderTextColor={theme.textSecondary}
-          selectionColor={theme.accent}
-          maxLength={2}
-          underlineColorAndroid="transparent"
-        />
+
+      <View style={styles.content}>
+        <Pressable onPress={() => adjust(-1)} style={styles.button}>
+          <Ionicons name="remove" size={18} color={theme.accent} />
+        </Pressable>
+
+        <View style={styles.center}>
+          <TextInput
+            style={[
+              styles.input,
+              Platform.OS === "web" ? ({ outlineStyle: "none" } as any) : null,
+            ]}
+            keyboardType="numeric"
+            value={value == null ? "" : String(value)}
+            onChangeText={handleChange}
+            placeholder="8"
+            placeholderTextColor={theme.textSecondary}
+            selectionColor={theme.accent}
+            maxLength={2}
+            underlineColorAndroid="transparent"
+          />
+
+          <Text style={styles.unit}>hours</Text>
+        </View>
+
+        <Pressable onPress={() => adjust(1)} style={styles.button}>
+          <Ionicons name="add" size={18} color={theme.accent} />
+        </Pressable>
       </View>
-    </View>
+    </GlassCard>
   );
 };
 
 const createStyles = (theme: Theme) =>
   StyleSheet.create({
-    sleepContainer: {
-      flex: 1,
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      paddingVertical: 16,
-    },
     title: {
       color: theme.textSecondary,
-      fontWeight: "600",
-      fontSize: 14,
+      fontSize: 13,
+      fontWeight: "700",
       textTransform: "uppercase",
       letterSpacing: 1,
       textAlign: "center",
       marginBottom: 20,
     },
-    inputWrapper: {
+
+    content: {
       flexDirection: "row",
       alignItems: "center",
-      justifyContent: "center",
+      justifyContent: "space-between",
     },
+
+    center: {
+      alignItems: "center",
+      flex: 1,
+    },
+
     input: {
-      fontSize: 48,
-      fontWeight: "800",
       color: theme.text,
+      fontSize: 36,
+      fontWeight: "800",
       textAlign: "center",
-      minWidth: 64,
+      minWidth: 48,
       padding: 0,
-      margin: 0,
     },
+
     unit: {
-      fontSize: 20,
-      fontWeight: "600",
+      marginTop: 4,
       color: theme.textSecondary,
-      marginLeft: 4,
-      marginTop: 16,
+      fontSize: 14,
+      fontWeight: "500",
+    },
+
+    button: {
+      width: 32,
+      height: 32,
+      borderRadius: 16,
+      backgroundColor: theme.accent + "18",
+      alignItems: "center",
+      justifyContent: "center",
     },
   });
 

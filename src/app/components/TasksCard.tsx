@@ -1,15 +1,24 @@
 import { TasksCardProps } from "@/types/tasksCardProps";
-import { View } from "react-native";
+import { StyleSheet, Text } from "react-native";
+
+import { Theme } from "@/types/theme";
+import useTheme from "../hooks/useTheme";
+import GlassCard from "./GlassCard";
 import TasksSection from "./TasksSection";
 
-const TasksCard = ({
+export default function TasksCard({
   todayTasks,
   onTodayTasksChange,
   carriedOverTasks,
   onCarriedOverTasksChange,
-}: TasksCardProps) => {
+}: TasksCardProps) {
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
+
   return (
-    <View>
+    <GlassCard style={styles.card}>
+      <Text style={styles.title}>Tasks</Text>
+
       <TasksSection
         title="Today's Tasks"
         value={todayTasks}
@@ -24,8 +33,23 @@ const TasksCard = ({
           onChange={onCarriedOverTasksChange}
         />
       )}
-    </View>
+    </GlassCard>
   );
-};
+}
 
-export default TasksCard;
+const createStyles = (theme: Theme) =>
+  StyleSheet.create({
+    card: {
+      marginBottom: 20,
+    },
+
+    title: {
+      color: theme.textSecondary,
+      fontSize: 13,
+      fontWeight: "700",
+      textTransform: "uppercase",
+      letterSpacing: 1,
+      textAlign: "center",
+      marginBottom: 20,
+    },
+  });
