@@ -5,7 +5,6 @@ import { useRef } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import useTheme from "../hooks/useTheme";
 import CustomChecklist from "./CustomChecklist";
-import GlassCard from "./GlassCard";
 
 type TasksSectionProps = {
   title: string;

@@ -1,6 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import { Platform, Pressable } from "react-native";
 import useTheme from "../hooks/useTheme";
 
 import CustomTabBar from "../components/CustomTabBar";

@@ -6,8 +6,14 @@ const THEME_KEY = "theme";
 export const getTheme = async (): Promise<ThemeMode> => {
   const value = await AsyncStorage.getItem(THEME_KEY);
 
-  if (value === "light" || value === "terminal" || value === "system") {
+  if (value === "light" || value === "dark" || value === "system") {
     return value;
+  }
+
+  // Migrate old "terminal" value to "dark"
+  if (value === "terminal") {
+    await AsyncStorage.setItem(THEME_KEY, "dark");
+    return "dark";
   }
 
   return "system";

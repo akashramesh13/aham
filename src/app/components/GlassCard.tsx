@@ -1,6 +1,6 @@
-import { BlurView } from "expo-blur";
 import { Platform, StyleSheet, View, ViewProps } from "react-native";
 import useTheme from "../hooks/useTheme";
+import { Theme } from "@/types/theme";
 
 interface GlassCardProps extends ViewProps {
   intensity?: number;
@@ -9,62 +9,41 @@ interface GlassCardProps extends ViewProps {
 export default function GlassCard({
   children,
   style,
-  intensity = 40,
+  intensity,
   ...rest
 }: GlassCardProps) {
   const { theme } = useTheme();
-
-  const isLight = theme.background === "#F5F5F7";
-
-  const cardStyle = [
-    styles.card,
-    {
-      backgroundColor: Platform.OS === "web" ? theme.glassBackground : "transparent",
-      borderColor: theme.glassBorder,
-
-      shadowColor: isLight ? "#88A1B5" : "#000000",
-      shadowOffset: { width: 0, height: 16 },
-      shadowOpacity: isLight ? 0.08 : 0.4,
-      shadowRadius: 32,
-      elevation: isLight ? 8 : 12,
-    },
-    style,
-  ];
-
-  if (Platform.OS === "web") {
-    return (
-      <View
-        style={[
-          cardStyle,
-          {
-            backdropFilter: `blur(${intensity}px) saturate(200%)`,
-            WebkitBackdropFilter: `blur(${intensity}px) saturate(200%)`,
-          } as any,
-        ]}
-        {...rest}
-      >
-        {children}
-      </View>
-    );
-  }
+  const styles = createStyles(theme);
 
   return (
-    <BlurView
-      tint={isLight ? "light" : "dark"}
-      intensity={intensity}
-      style={cardStyle}
-      {...rest}
-    >
+    <View style={[styles.card, style]} {...rest}>
       {children}
-    </BlurView>
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    overflow: "hidden",
-    borderRadius: 24,
-    borderWidth: 1.5,
-    padding: 18,
-  },
-});
+const createStyles = (theme: Theme) =>
+  StyleSheet.create({
+    card: {
+      overflow: "hidden",
+      borderRadius: 24,
+      borderWidth: 1,
+      borderColor: theme.border,
+      padding: 18,
+      backgroundColor: theme.surface,
+      ...Platform.select({
+        ios: {
+          shadowColor: "#000000",
+          shadowOffset: { width: 0, height: 8 },
+          shadowOpacity: 0.06,
+          shadowRadius: 24,
+        },
+        android: {
+          elevation: 4,
+        },
+        web: {
+          boxShadow: "0 8px 24px rgba(0,0,0,0.06)",
+        },
+      }),
+    },
+  });

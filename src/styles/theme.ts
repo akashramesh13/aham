@@ -1,31 +1,28 @@
 import { Theme } from "@/types/theme";
 
 export const lightTheme: Theme = {
-  background: "#F5F5F7",
+  background: "#FDFBF7",
   surface: "#FFFFFF",
-  surface2: "#F8F8FA",
+  surface2: "#F4F2EC",
 
-  text: "#1D1D1F",
-  textSecondary: "#86868B",
+  text: "#111111",
+  textSecondary: "#555555",
 
-  border: "#E5E5EA",
+  border: "#EAEAEA",
 
-  accent: "#EA580C",
-  today: "#000000",
-
-  glassBackground: "rgba(255, 255, 255, 0.15)",
-  glassBorder: "rgba(255, 255, 255, 0.4)",
+  accent: "#8A0322",
+  heroAccent: "#CA2127",
+  today: "#111111",
 };
 
-export const terminalTheme: Theme = {
-  background: "#000000",
-  surface: "#0A0A0A",
-  surface2: "#151515",
-  text: "#E8E8E8",
-  textSecondary: "#A0A0A0",
-  border: "#222222",
-  accent: "#22C55E",
-  today: "#FFFFFF",
-  glassBackground: "rgba(30, 30, 30, 0.2)",
-  glassBorder: "rgba(255, 255, 255, 0.15)",
+export const darkTheme: Theme = {
+  background: "#161514",
+  surface: "#1E1D1C",
+  surface2: "#282625",
+  text: "#EFECE6",
+  textSecondary: "#999591",
+  border: "#33302E",
+  accent: "#D43A53",
+  heroAccent: "#D43A53",
+  today: "#EFECE6",
 };

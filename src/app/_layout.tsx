@@ -9,7 +9,7 @@ import { Platform } from "react-native";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-// import { NotificationService } from "@/backend/services/NotificationService";
+import { NotificationService } from "@/backend/services/NotificationService";
 
 import LaunchScreen from "@/app/components/LaunchScreen";
 
@@ -31,7 +31,7 @@ export default function RootLayout() {
   useEffect(() => {
     async function prepareSystem() {
       try {
-        // NotificationService.init();
+        NotificationService.init();
         const showLaunchAlways = await AsyncStorage.getItem("showLaunchAlways");
         if (showLaunchAlways === "true") {
           setShowLaunch(true);

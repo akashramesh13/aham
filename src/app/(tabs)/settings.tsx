@@ -14,7 +14,6 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
-  Switch,
   Text,
   View,
 } from "react-native";
@@ -26,6 +25,8 @@ import AmbientBackground from "../components/AmbientBackground";
 import AppHeader from "../components/AppHeader";
 import CustomButton from "../components/CustomButton";
 import RadioList from "../components/RadioList";
+import SwipeableScreen from "../components/SwipeableScreen";
+import CustomSwitch from "../components/CustomSwitch";
 import useTheme from "../hooks/useTheme";
 
 export default function Settings() {
@@ -114,27 +115,6 @@ export default function Settings() {
 
   const styles = createStyles(theme);
 
-  const switchProps = {
-    trackColor: {
-      false: "transparent",
-      true: theme.accent,
-    },
-    thumbColor: theme.text,
-    ios_backgroundColor: "transparent",
-  };
-
-  const ThemedSwitch = ({
-    value,
-    onValueChange,
-  }: {
-    value: boolean;
-    onValueChange: (value: boolean) => void;
-  }) => (
-    <View style={styles.switchWrapper}>
-      <Switch {...switchProps} value={value} onValueChange={onValueChange} />
-    </View>
-  );
-
   const handleExport = async () => {
     try {
       setIsExporting(true);
@@ -181,8 +161,9 @@ export default function Settings() {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={["top"]}>
-      <AmbientBackground />
+    <SwipeableScreen>
+      <SafeAreaView style={styles.container} edges={["top"]}>
+        <AmbientBackground />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -207,8 +188,8 @@ export default function Settings() {
                 label: "Light",
               },
               {
-                value: "terminal",
-                label: "Terminal (Dark)",
+                value: "dark",
+                label: "Dark",
               },
             ]}
           />
@@ -216,7 +197,7 @@ export default function Settings() {
           <View style={[styles.row, { marginTop: 16 }]}>
             <Text style={styles.label}>Always Show Intro Animation</Text>
 
-            <ThemedSwitch
+            <CustomSwitch
               value={showLaunchAlways}
               onValueChange={toggleLaunchAlways}
             />
@@ -230,7 +211,7 @@ export default function Settings() {
             <View style={styles.row}>
               <Text style={styles.label}>Daily Journal Reminder</Text>
 
-              <ThemedSwitch
+              <CustomSwitch
                 value={reminderEnabled}
                 onValueChange={toggleReminder}
               />
@@ -287,7 +268,8 @@ export default function Settings() {
           />
         </View>
       </ScrollView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </SwipeableScreen>
   );
 }
 
@@ -331,13 +313,7 @@ const createStyles = (theme: Theme) =>
       marginRight: 16,
     },
 
-    switchWrapper: {
-      borderWidth: 2,
-      borderColor: theme.accent,
-      borderRadius: 16,
-      padding: 2,
-      backgroundColor: theme.glassBackground,
-    },
+
 
     timeButton: {
       backgroundColor: theme.accent + "22",

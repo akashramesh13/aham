@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
-import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -10,6 +10,7 @@ import { Theme } from "@/types/theme";
 import AmbientBackground from "../components/AmbientBackground";
 import AppHeader from "../components/AppHeader";
 import MonthYearPicker from "../components/MonthYearPicker";
+import SwipeableScreen from "../components/SwipeableScreen";
 import useTheme from "../hooks/useTheme";
 
 export default function CalendarScreen() {
@@ -19,6 +20,8 @@ export default function CalendarScreen() {
   const [markedDates, setMarkedDates] = useState<Record<string, any>>({});
   const [isPickerVisible, setIsPickerVisible] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date().toISOString().slice(0, 10));
+  // Track the date the user last tapped — persists across tab switches
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
   const today = new Date().toISOString().slice(0, 10);
 
@@ -33,6 +36,49 @@ export default function CalendarScreen() {
       });
     }, [theme.accent])
   );
+
+  // Build markedDates with today (accent text) + selected date (accent ring)
+  const buildMarkedDates = () => {
+    const result: Record<string, any> = {};
+
+    // Copy journal-entry dots
+    Object.keys(markedDates).forEach((d) => {
+      result[d] = { ...markedDates[d] };
+    });
+
+    // Today: accent-colored text, no background
+    result[today] = {
+      ...(result[today] || {}),
+      customStyles: {
+        text: {
+          color: theme.accent,
+          fontWeight: "700" as const,
+        },
+      },
+    };
+
+    // Selected date (if different from today): accent ring/circle
+    if (selectedDate && selectedDate !== today) {
+      result[selectedDate] = {
+        ...(result[selectedDate] || {}),
+        customStyles: {
+          container: {
+            backgroundColor: theme.accent,
+            borderWidth: 2,
+            borderColor: theme.accent,
+            alignItems: "center" as const,
+            justifyContent: "center" as const,
+          },
+          text: {
+            color: theme.background,
+            fontWeight: "700" as const,
+          },
+        },
+      };
+    }
+
+    return result;
+  };
 
   const renderCustomHeader = (date: any) => {
     const month = date.toString("MMMM yyyy");
@@ -51,140 +97,63 @@ export default function CalendarScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={["top"]}>
-      <AmbientBackground />
-      <AppHeader title="Calendar" />
+    <SwipeableScreen>
+      <SafeAreaView style={styles.container} edges={["top"]}>
+        <AmbientBackground />
+        <AppHeader title="Calendar" />
 
-      <View style={styles.content}>
-        {Platform.OS === "web" && (
-          <style type="text/css">{`
-            [data-testid^="aham_calendar.day_"]:hover [data-testid$=".text"] {
-              background-color: ${theme.glassBackground} !important;
-            }
-            [data-testid^="aham_calendar.day_"] {
-              transition: opacity 0.2s;
-            }
-          `}</style>
-        )}
-        <Calendar
-          testID="aham_calendar"
-          key={currentMonth + mode}
-          current={currentMonth}
-          maxDate={today}
-          hideExtraDays={true}
-          onMonthChange={(month: any) => setCurrentMonth(month.dateString)}
-          renderHeader={renderCustomHeader}
-          style={styles.calendar}
-          theme={{
-            backgroundColor: "transparent",
-            calendarBackground: "transparent",
-            textSectionTitleColor: theme.textSecondary,
-            selectedDayBackgroundColor: "transparent", // Stop applying background to base
-            selectedDayTextColor: theme.accent, // Fix: Text should be accent colored, not background colored!
-            todayTextColor: theme.today,
-            dayTextColor: theme.text,
-            textDisabledColor: theme.textSecondary,
-            dotColor: theme.accent,
-            selectedDotColor: theme.accent, // Dot is always outside the green circle now
-            arrowColor: theme.text,
-            monthTextColor: theme.text,
-            textDayFontWeight: "500",
-            textMonthFontWeight: "800",
-            textDayHeaderFontWeight: "700",
-            textDayFontSize: 20,
-            textMonthFontSize: 24,
-            textDayFontFamily: "CalendarFont-Medium",
-            textMonthFontFamily: "CalendarFont-Bold",
-            textDayHeaderFontFamily: "CalendarFont-Medium",
-            weekVerticalMargin: 12, // Lowered slightly since base dynamically wraps both text and dot now
+        <View style={styles.content}>
+          <Calendar
+            testID="aham_calendar"
+            key={currentMonth + mode}
+            current={currentMonth}
+            maxDate={today}
+            hideExtraDays={true}
+            disableArrowRight={currentMonth.startsWith(today.slice(0, 7))}
+            markingType="custom"
+            onMonthChange={(month: any) => setCurrentMonth(month.dateString)}
+            renderHeader={renderCustomHeader}
+            style={styles.calendar}
+            theme={{
+              backgroundColor: "transparent",
+              calendarBackground: "transparent",
+              textSectionTitleColor: theme.textSecondary,
+              dayTextColor: theme.text,
+              textDisabledColor: theme.textSecondary + "55",
+              dotColor: theme.accent,
+              arrowColor: theme.text,
+              monthTextColor: theme.text,
+              textDayFontWeight: "500",
+              textMonthFontWeight: "800",
+              textDayHeaderFontWeight: "700",
+              textDayFontSize: 20,
+              textMonthFontSize: 24,
+              textDayFontFamily: "CalendarFont-Medium",
+              textMonthFontFamily: "CalendarFont-Bold",
+              textDayHeaderFontFamily: "CalendarFont-Medium",
+              weekVerticalMargin: 12,
+            }}
+            markedDates={buildMarkedDates()}
+            onDayPress={(day: any) => {
+              setSelectedDate(day.dateString);
+              router.push({
+                pathname: "/(tabs)",
+                params: { date: day.dateString },
+              });
+            }}
+          />
+        </View>
 
-            // Force these to ensure react-native-calendars doesn't default to #2d4150
-            stylesheet: {
-              day: {
-                basic: {
-                  base: {
-                    width: 56,
-                    alignItems: 'center',
-                    justifyContent: 'flex-start',
-                    backgroundColor: 'transparent'
-                  },
-                  text: {
-                    width: 56,
-                    height: 56,
-                    textAlign: 'center',
-                    textAlignVertical: 'center',
-                    lineHeight: Platform.OS === 'ios' ? 56 : undefined,
-                    fontSize: 20,
-                    fontFamily: "CalendarFont-Medium",
-                    fontWeight: '500',
-                    color: theme.text,
-                    backgroundColor: 'transparent',
-                    borderRadius: 28,
-                    overflow: 'hidden',
-                    marginTop: 0
-                  },
-                  selected: {
-                    backgroundColor: 'transparent',
-                    borderRadius: 0
-                  },
-                  today: {
-                    backgroundColor: 'transparent',
-                    borderRadius: 0
-                  },
-                  selectedText: {
-                    color: theme.accent,
-                    backgroundColor: 'transparent'
-                  },
-                  todayText: {
-                    color: theme.textSecondary,
-                    backgroundColor: 'transparent'
-                  },
-                  disabledText: {
-                    color: theme.textSecondary
-                  },
-                  dot: {
-                    width: 6,
-                    height: 6,
-                    borderRadius: 3,
-                    opacity: 0,
-                    marginTop: 8 // Native flex margin below the 56x56 text circle
-                  },
-                  visibleDot: {
-                    opacity: 1,
-                    backgroundColor: theme.accent
-                  },
-                  selectedDot: {
-                    backgroundColor: theme.accent
-                  }
-                }
-              }
-            }
-          }}
-          markedDates={{
-            ...markedDates,
-            [today]: {
-              ...markedDates[today],
-              selected: true,
-            },
-          }}
-          onDayPress={(day: any) => {
-            router.push({
-              pathname: "/(tabs)",
-              params: { date: day.dateString },
-            });
+        <MonthYearPicker
+          visible={isPickerVisible}
+          onClose={() => setIsPickerVisible(false)}
+          currentDate={currentMonth}
+          onSelect={(date) => {
+            setCurrentMonth(date);
           }}
         />
-      </View>
-
-      <MonthYearPicker
-        visible={isPickerVisible}
-        onClose={() => setIsPickerVisible(false)}
-        currentDate={currentMonth}
-        onSelect={(date) => {
-          setCurrentMonth(date);
-        }}
-      />
-    </SafeAreaView>
+      </SafeAreaView>
+    </SwipeableScreen>
   );
 }
 
@@ -209,10 +178,10 @@ const createStyles = (theme: Theme) =>
       gap: 8,
       paddingVertical: 10,
       paddingHorizontal: 16,
-      backgroundColor: theme.glassBackground,
+      backgroundColor: theme.surface,
       borderRadius: 12,
       borderWidth: 1,
-      borderColor: theme.glassBorder,
+      borderColor: theme.border,
     },
     customHeaderText: {
       color: theme.text,

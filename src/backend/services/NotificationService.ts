@@ -18,11 +18,12 @@ export class NotificationService {
     });
 
     if (Platform.OS === "android") {
-      await Notifications.setNotificationChannelAsync("default", {
-        name: "default",
+      await Notifications.setNotificationChannelAsync("aham_daily", {
+        name: "Daily Reminder",
         importance: Notifications.AndroidImportance.MAX,
         vibrationPattern: [0, 250, 250, 250],
-        lightColor: "#EA580C",
+        lightColor: "#8A0322", // New accent color
+        sound: "calm_chime.wav", // The custom sound
       });
     }
   }
@@ -50,13 +51,14 @@ export class NotificationService {
       content: {
         title: "Time to reflect ✍️",
         body: "Take a moment to write down your journal entry and log your day.",
-        sound: true,
+        sound: "calm_chime.wav", // Custom sound for iOS
       },
       trigger: {
+        type: Notifications.SchedulableTriggerInputTypes.DAILY,
         hour,
         minute,
-        repeats: true,
-      } as any,
+        channelId: "aham_daily", // Important for Android to use the new channel
+      },
     });
   }
 

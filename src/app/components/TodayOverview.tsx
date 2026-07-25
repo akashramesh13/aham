@@ -200,7 +200,7 @@ export default function TodayOverview({
 
         <Pressable
           style={({ pressed }) => [styles.center, pressed && styles.pressed]}
-          onPress={() => router.push("/(tabs)/calendar")}
+          onPress={() => router.push({ pathname: "/(tabs)/calendar", params: { selectedDate: selectedDate } })}
         >
           <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
             {isReadOnly && (
@@ -326,11 +326,11 @@ const createStyles = (theme: Theme) =>
       width: 44,
       height: 44,
       borderRadius: 22,
-      backgroundColor: theme.glassBackground,
+      backgroundColor: theme.surface,
       alignItems: "center",
       justifyContent: "center",
       borderWidth: 1,
-      borderColor: theme.glassBorder,
+      borderColor: theme.border,
     },
 
     pressed: {

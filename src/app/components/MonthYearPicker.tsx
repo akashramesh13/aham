@@ -147,7 +147,7 @@ const createStyles = (theme: Theme) =>
       width: "100%",
       borderTopWidth: 1,
       borderBottomWidth: 1,
-      borderColor: theme.glassBorder,
+      borderColor: theme.border,
       paddingVertical: 16,
     },
     scrollColumn: {
@@ -155,7 +155,7 @@ const createStyles = (theme: Theme) =>
     },
     divider: {
       width: 1,
-      backgroundColor: theme.glassBorder,
+      backgroundColor: theme.border,
       marginHorizontal: 8,
     },
     item: {

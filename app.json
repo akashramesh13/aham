@@ -46,7 +46,14 @@
       ],
       "expo-sqlite",
       "expo-sharing",
-      "expo-notifications",
+      [
+        "expo-notifications",
+        {
+          "sounds": [
+            "./assets/sounds/calm_chime.wav"
+          ]
+        }
+      ],
       "@react-native-community/datetimepicker"
     ],
     "experiments": {

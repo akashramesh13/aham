@@ -1,4 +1,4 @@
-export type ThemeMode = "light" | "terminal" | "system";
+export type ThemeMode = "light" | "dark" | "system";
 
 export type Theme = {
   background: string;
@@ -8,7 +8,6 @@ export type Theme = {
   textSecondary: string;
   border: string;
   accent: string;
+  heroAccent: string;
   today: string;
-  glassBackground: string;
-  glassBorder: string;
 };

@@ -116,7 +116,7 @@ const createStyles = (theme: Theme) =>
     },
     pill: {
       flexDirection: "row",
-      backgroundColor: theme.glassBackground,
+      backgroundColor: theme.surface,
       borderRadius: 40,
       padding: 8,
       alignItems: "center",

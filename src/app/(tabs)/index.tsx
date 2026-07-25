@@ -2,6 +2,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AppHeader from "../components/AppHeader";
 import AmbientBackground from "../components/AmbientBackground";
+import SwipeableScreen from "../components/SwipeableScreen";
 import TodayOverview from "../components/TodayOverview";
 import useTheme from "../hooks/useTheme";
 import { Theme } from "@/types/theme";
@@ -21,26 +22,28 @@ export default function HomeScreen() {
   const isReadOnly = date && date !== today && !isEditingPast;
 
   return (
-    <SafeAreaView style={styles.container} edges={["top"]}>
-      <AmbientBackground />
-      <KeyboardAwareScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-        keyboardShouldPersistTaps="handled"
-      >
-        <AppHeader title="अहम्" />
-        <TodayOverview isEditingPast={isEditingPast} setIsEditingPast={setIsEditingPast} />
-      </KeyboardAwareScrollView>
-      
-      {isReadOnly && (
-        <Pressable
-          style={({ pressed }) => [styles.floatingEditButton, pressed && styles.pressed]}
-          onPress={() => setIsEditingPast(true)}
+    <SwipeableScreen>
+      <SafeAreaView style={styles.container} edges={["top"]}>
+        <AmbientBackground />
+        <KeyboardAwareScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
         >
-          <Ionicons name="pencil" size={24} color={theme.accent} />
-        </Pressable>
-      )}
-    </SafeAreaView>
+          <AppHeader title="अहम्" />
+          <TodayOverview isEditingPast={isEditingPast} setIsEditingPast={setIsEditingPast} />
+        </KeyboardAwareScrollView>
+        
+        {isReadOnly && (
+          <Pressable
+            style={({ pressed }) => [styles.floatingEditButton, pressed && styles.pressed]}
+            onPress={() => setIsEditingPast(true)}
+          >
+            <Ionicons name="pencil" size={24} color={theme.accent} />
+          </Pressable>
+        )}
+      </SafeAreaView>
+    </SwipeableScreen>
   );
 }
 
