@@ -31,24 +31,38 @@ export default function RootLayout() {
 
   useEffect(() => {
     async function prepareSystem() {
+      // 1. Navigation Bar (Fragile on some Android skins, do not let it crash the boot process)
       try {
         if (Platform.OS === "android") {
-          NavigationBar.setPositionAsync("absolute");
-          NavigationBar.setVisibilityAsync("hidden");
-          NavigationBar.setBehaviorAsync("overlay-swipe");
+          await NavigationBar.setPositionAsync("absolute");
+          await NavigationBar.setVisibilityAsync("hidden");
+          await NavigationBar.setBehaviorAsync("overlay-swipe");
         }
+      } catch (e) {
+        console.log("NavigationBar API not supported on this device:", e);
+      }
 
+      // 2. Notifications
+      try {
         NotificationService.init();
+      } catch (e) {
+        console.log("Notification init failed:", e);
+      }
+      
+      // 3. Launch Screen Toggle
+      try {
         const showLaunchAlways = await AsyncStorage.getItem("showLaunchAlways");
-        if (showLaunchAlways === "true") {
-          setShowLaunch(true);
+        if (showLaunchAlways === "false") {
+          setShowLaunch(false);
         } else {
-          const hasSeen = await AsyncStorage.getItem("hasSeenLaunch");
-          if (hasSeen === "true") {
-            setShowLaunch(false);
-          }
+          setShowLaunch(true);
         }
+      } catch (e) {
+        console.log("Failed to read showLaunchAlways:", e);
+      }
 
+      // 4. Database Migrations
+      try {
         if (Platform.OS !== "web") {
           console.log("Running migrations...");
           await migrateDatabase();
@@ -56,9 +70,10 @@ export default function RootLayout() {
         }
       } catch (e) {
         console.error("Migration failed:", e);
-      } finally {
-        setIsReady(true);
       }
+
+      // 5. Finalize Boot
+      setIsReady(true);
     }
 
     prepareSystem();
@@ -91,7 +106,7 @@ export default function RootLayout() {
         <ThemeProvider>
           <StatusBar hidden />
           <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: 'transparent' } }}>
-            <Stack.Screen name="(tabs)" />
+            <Stack.Screen name="index" />
           </Stack>
         </ThemeProvider>
       </KeyboardProvider>

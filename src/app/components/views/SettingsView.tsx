@@ -37,7 +37,7 @@ export default function Settings() {
   const [reminderTime, setReminderTime] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
 
-  const [showLaunchAlways, setShowLaunchAlways] = useState(false);
+  const [showLaunchAlways, setShowLaunchAlways] = useState(true);
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -53,7 +53,7 @@ export default function Settings() {
       }
 
       const launchSetting = await AsyncStorage.getItem("showLaunchAlways");
-      setShowLaunchAlways(launchSetting === "true");
+      setShowLaunchAlways(launchSetting !== "false"); // Default to true if null or "true"
     };
 
     loadSettings();
@@ -65,6 +65,8 @@ export default function Settings() {
 
     if (val) {
       await AsyncStorage.removeItem("hasSeenLaunch");
+    } else {
+      await AsyncStorage.setItem("hasSeenLaunch", "true");
     }
   };
 
@@ -264,6 +266,14 @@ export default function Settings() {
             onPress={handleExport}
             isLoading={isExporting}
           />
+        </View>
+
+        <View style={styles.section}>
+          <Text style={[styles.heading, { fontSize: 16, color: theme.textSecondary }]}>Debug Info</Text>
+          <Text style={{ color: theme.textSecondary }}>Build: 2026-07-25 18:59</Text>
+          <Text style={{ color: theme.textSecondary }}>
+            Storage Value: {showLaunchAlways ? "ON" : "OFF"}
+          </Text>
         </View>
       </ScrollView>
       </SafeAreaView>

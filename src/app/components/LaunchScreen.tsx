@@ -30,6 +30,12 @@ export default function LaunchScreen({ onFinish }: { onFinish: () => void }) {
         // to completely finish before starting frame 1 of our Lottie animation
         setTimeout(() => {
           animationRef.current?.play();
+          
+          // Fallback: onAnimationFinish often fails to fire on Android when using pause/play
+          // The animation is ~4.25s long (255 frames @ 60fps), so we force-finish after 4.5s
+          setTimeout(() => {
+            onFinish();
+          }, 4500);
         }, 350);
       }, 50);
     });
