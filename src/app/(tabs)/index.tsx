@@ -2,7 +2,6 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AppHeader from "../components/AppHeader";
 import AmbientBackground from "../components/AmbientBackground";
-import SwipeableScreen from "../components/SwipeableScreen";
 import TodayOverview from "../components/TodayOverview";
 import useTheme from "../hooks/useTheme";
 import { Theme } from "@/types/theme";
@@ -22,7 +21,6 @@ export default function HomeScreen() {
   const isReadOnly = date && date !== today && !isEditingPast;
 
   return (
-    <SwipeableScreen>
       <SafeAreaView style={styles.container} edges={["top"]}>
         <AmbientBackground />
         <KeyboardAwareScrollView
@@ -43,7 +41,6 @@ export default function HomeScreen() {
           </Pressable>
         )}
       </SafeAreaView>
-    </SwipeableScreen>
   );
 }
 
@@ -55,7 +52,7 @@ const createStyles = (theme: Theme) =>
     },
     scrollContent: {
       paddingHorizontal: 16,
-      paddingBottom: 100,
+      paddingBottom: 130,
     },
     floatingEditButton: {
       position: "absolute",

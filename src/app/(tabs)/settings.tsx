@@ -25,7 +25,6 @@ import AmbientBackground from "../components/AmbientBackground";
 import AppHeader from "../components/AppHeader";
 import CustomButton from "../components/CustomButton";
 import RadioList from "../components/RadioList";
-import SwipeableScreen from "../components/SwipeableScreen";
 import CustomSwitch from "../components/CustomSwitch";
 import useTheme from "../hooks/useTheme";
 
@@ -161,7 +160,6 @@ export default function Settings() {
   };
 
   return (
-    <SwipeableScreen>
       <SafeAreaView style={styles.container} edges={["top"]}>
         <AmbientBackground />
 
@@ -269,7 +267,6 @@ export default function Settings() {
         </View>
       </ScrollView>
       </SafeAreaView>
-    </SwipeableScreen>
   );
 }
 
@@ -283,7 +280,7 @@ const createStyles = (theme: Theme) =>
     content: {
       paddingHorizontal: 20,
       paddingTop: 20,
-      paddingBottom: 40,
+      paddingBottom: 130,
     },
 
     section: {

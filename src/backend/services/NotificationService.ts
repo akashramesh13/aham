@@ -18,7 +18,7 @@ export class NotificationService {
     });
 
     if (Platform.OS === "android") {
-      await Notifications.setNotificationChannelAsync("aham_daily", {
+      await Notifications.setNotificationChannelAsync("aham_daily_v2", {
         name: "Daily Reminder",
         importance: Notifications.AndroidImportance.MAX,
         vibrationPattern: [0, 250, 250, 250],
@@ -57,7 +57,7 @@ export class NotificationService {
         type: Notifications.SchedulableTriggerInputTypes.DAILY,
         hour,
         minute,
-        channelId: "aham_daily", // Important for Android to use the new channel
+        channelId: "aham_daily_v2", // Important for Android to use the new channel
       },
     });
   }

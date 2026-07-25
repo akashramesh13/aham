@@ -9,6 +9,7 @@ import { Platform } from "react-native";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
+import * as NavigationBar from "expo-navigation-bar";
 import { NotificationService } from "@/backend/services/NotificationService";
 
 import LaunchScreen from "@/app/components/LaunchScreen";
@@ -31,6 +32,12 @@ export default function RootLayout() {
   useEffect(() => {
     async function prepareSystem() {
       try {
+        if (Platform.OS === "android") {
+          NavigationBar.setPositionAsync("absolute");
+          NavigationBar.setVisibilityAsync("hidden");
+          NavigationBar.setBehaviorAsync("overlay-swipe");
+        }
+
         NotificationService.init();
         const showLaunchAlways = await AsyncStorage.getItem("showLaunchAlways");
         if (showLaunchAlways === "true") {

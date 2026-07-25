@@ -10,7 +10,6 @@ import { Theme } from "@/types/theme";
 import AmbientBackground from "../components/AmbientBackground";
 import AppHeader from "../components/AppHeader";
 import MonthYearPicker from "../components/MonthYearPicker";
-import SwipeableScreen from "../components/SwipeableScreen";
 import useTheme from "../hooks/useTheme";
 
 export default function CalendarScreen() {
@@ -97,7 +96,6 @@ export default function CalendarScreen() {
   };
 
   return (
-    <SwipeableScreen>
       <SafeAreaView style={styles.container} edges={["top"]}>
         <AmbientBackground />
         <AppHeader title="Calendar" />
@@ -153,7 +151,6 @@ export default function CalendarScreen() {
           }}
         />
       </SafeAreaView>
-    </SwipeableScreen>
   );
 }
 
@@ -167,6 +164,7 @@ const createStyles = (theme: Theme) =>
       flex: 1,
       paddingTop: 16,
       paddingHorizontal: 16,
+      paddingBottom: 130,
     },
     calendar: {
       borderRadius: 16,

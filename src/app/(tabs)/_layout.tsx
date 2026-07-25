@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Tabs } from "expo-router";
+import { TopTabs } from "../components/TopTabs";
 import useTheme from "../hooks/useTheme";
 
 import CustomTabBar from "../components/CustomTabBar";
@@ -8,39 +8,40 @@ export default function TabLayout() {
   const { theme } = useTheme();
 
   return (
-    <Tabs
+    <TopTabs
+      tabBarPosition="bottom"
       tabBar={(props) => <CustomTabBar {...props} />}
       screenOptions={{
-        headerShown: false,
+        swipeEnabled: true,
       }}
     >
-      <Tabs.Screen
+      <TopTabs.Screen
         name="index"
         options={{
           title: "Home",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home" size={size} color={color} />
+            <Ionicons name="home" size={24} color={color} />
           ),
         }}
       />
-      <Tabs.Screen
+      <TopTabs.Screen
         name="calendar"
         options={{
           title: "Calendar",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="calendar" size={size} color={color} />
+            <Ionicons name="calendar" size={24} color={color} />
           ),
         }}
       />
-      <Tabs.Screen
+      <TopTabs.Screen
         name="settings"
         options={{
           title: "Settings",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="settings" size={size} color={color} />
+            <Ionicons name="settings" size={24} color={color} />
           ),
         }}
       />
-    </Tabs>
+    </TopTabs>
   );
 }

@@ -13,6 +13,10 @@
     },
     "android": {
       "package": "com.sillycat.aham",
+      "permissions": [
+        "SCHEDULE_EXACT_ALARM",
+        "USE_EXACT_ALARM"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon_splash.png",
         "backgroundColor": "#000000"
