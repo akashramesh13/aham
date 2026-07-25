@@ -200,7 +200,7 @@ export default function TodayOverview({
 
         <Pressable
           style={({ pressed }) => [styles.center, pressed && styles.pressed]}
-          onPress={() => router.push({ pathname: "/(tabs)/calendar", params: { selectedDate: selectedDate } })}
+          onPress={() => router.push({ pathname: "/", params: { tab: "calendar", selectedDate: selectedDate } })}
         >
           <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
             {isReadOnly && (

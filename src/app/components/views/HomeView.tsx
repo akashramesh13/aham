@@ -1,9 +1,9 @@
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { SafeAreaView } from "react-native-safe-area-context";
-import AppHeader from "../components/AppHeader";
-import AmbientBackground from "../components/AmbientBackground";
-import TodayOverview from "../components/TodayOverview";
-import useTheme from "../hooks/useTheme";
+import AppHeader from "../AppHeader";
+import AmbientBackground from "../AmbientBackground";
+import TodayOverview from "../TodayOverview";
+import useTheme from "../../hooks/useTheme";
 import { Theme } from "@/types/theme";
 import { StyleSheet, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";

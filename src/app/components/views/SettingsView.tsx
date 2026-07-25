@@ -21,12 +21,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { JournalService } from "@/backend/services/JournalService";
 import { NotificationService } from "@/backend/services/NotificationService";
-import AmbientBackground from "../components/AmbientBackground";
-import AppHeader from "../components/AppHeader";
-import CustomButton from "../components/CustomButton";
-import RadioList from "../components/RadioList";
-import CustomSwitch from "../components/CustomSwitch";
-import useTheme from "../hooks/useTheme";
+import AmbientBackground from "../AmbientBackground";
+import AppHeader from "../AppHeader";
+import CustomButton from "../CustomButton";
+import RadioList from "../RadioList";
+import CustomSwitch from "../CustomSwitch";
+import useTheme from "../../hooks/useTheme";
 
 export default function Settings() {
   const { mode, setTheme, theme } = useTheme();

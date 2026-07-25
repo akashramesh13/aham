@@ -7,10 +7,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { JournalService } from "@/backend/services/JournalService";
 import { Theme } from "@/types/theme";
-import AmbientBackground from "../components/AmbientBackground";
-import AppHeader from "../components/AppHeader";
-import MonthYearPicker from "../components/MonthYearPicker";
-import useTheme from "../hooks/useTheme";
+import AmbientBackground from "../AmbientBackground";
+import AppHeader from "../AppHeader";
+import MonthYearPicker from "../MonthYearPicker";
+import useTheme from "../../hooks/useTheme";
 
 export default function CalendarScreen() {
   const { theme, mode } = useTheme();

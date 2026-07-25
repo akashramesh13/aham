@@ -81,7 +81,7 @@ async function main() {
 
     // 1. Execute a local Android production build
     console.log('\n[1/5] Executing local Android production build...');
-    await runCommand('npm run build:android:local', PROJECT_ROOT);
+    await runCommand('./gradlew assembleRelease', path.join(PROJECT_ROOT, 'android'));
 
     // 2. & 3. Find the generated APK automatically
     console.log('\n[2/5] Locating the generated APK...');

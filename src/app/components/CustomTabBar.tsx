@@ -8,7 +8,7 @@ import { useState } from "react";
 
 const TAB_WIDTH = 60;
 
-export default function CustomTabBar({ state, descriptors, navigation }: any) {
+export default function CustomTabBar({ activeIndex, onTabPress }: { activeIndex: number, onTabPress: (index: number) => void }) {
   const { theme } = useTheme();
   const styles = createStyles(theme);
 
@@ -16,7 +16,7 @@ export default function CustomTabBar({ state, descriptors, navigation }: any) {
     return {
       transform: [
         {
-          translateX: withSpring(state.index * 68, {
+          translateX: withSpring(activeIndex * 68, {
             damping: 30,
             stiffness: 250,
             mass: 0.8,
@@ -26,46 +26,32 @@ export default function CustomTabBar({ state, descriptors, navigation }: any) {
     };
   });
 
+  const routes = [
+    { key: 'home', icon: 'home', iconOutline: 'home-outline' },
+    { key: 'calendar', icon: 'calendar', iconOutline: 'calendar-outline' },
+    { key: 'settings', icon: 'options', iconOutline: 'options-outline' },
+  ] as const;
+
   return (
     <View style={styles.container} pointerEvents="box-none">
       <GlassCard style={styles.pill}>
         <Animated.View style={[styles.indicator, animatedIndicatorStyle]} />
 
-        {state.routes.map((route: any, index: number) => {
-          const { options } = descriptors[route.key];
-          
-          const isFocused = state.index === index;
+        {routes.map((route, index) => {
+          const isFocused = activeIndex === index;
 
           const onPress = () => {
-            const event = navigation.emit({
-              type: "tabPress",
-              target: route.key,
-              canPreventDefault: true,
-            });
-
-            if (!isFocused && !event.defaultPrevented) {
-              navigation.navigate(route.name, route.params);
-            }
+            onTabPress(index);
           };
 
-          const onLongPress = () => {
-            navigation.emit({
-              type: "tabLongPress",
-              target: route.key,
-            });
-          };
-
-          let iconName: keyof typeof Ionicons.glyphMap = isFocused ? "home" : "home-outline";
-          if (route.name === "calendar") iconName = isFocused ? "calendar" : "calendar-outline";
-          else if (route.name === "settings") iconName = isFocused ? "options" : "options-outline";
+          const iconName: any = isFocused ? route.icon : route.iconOutline;
 
           return (
             <Pressable
-              key={route.name}
+              key={route.key}
               accessibilityRole="button"
               accessibilityState={isFocused ? { selected: true } : {}}
               onPress={onPress}
-              onLongPress={onLongPress}
               style={styles.tab}
             >
               <AnimatedIcon

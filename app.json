@@ -22,7 +22,10 @@
         "backgroundColor": "#000000"
       },
       "softwareKeyboardLayoutMode": "pan",
-      "predictiveBackGestureEnabled": true
+      "predictiveBackGestureEnabled": true,
+      "navigationBar": {
+        "visible": "immersive"
+      }
     },
     "web": {
       "output": "static",
