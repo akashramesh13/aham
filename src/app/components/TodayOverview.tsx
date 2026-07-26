@@ -236,13 +236,6 @@ export default function TodayOverview({
           onPress={() => router.push({ pathname: "/", params: { tab: "calendar", selectedDate: selectedDate } })}
         >
           <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
-            {isReadOnly && (
-              <Ionicons
-                name="lock-closed"
-                size={14}
-                color={theme.textSecondary}
-              />
-            )}
             <Text style={styles.title}>Journal</Text>
           </View>
 
@@ -281,16 +274,31 @@ export default function TodayOverview({
       </View>
 
       {selectedDate !== today && (
-        <Pressable
-          onPress={goToToday}
-          style={({ pressed }) => [
-            styles.todayPill,
-            pressed && styles.pressed,
-          ]}
-        >
-          <Ionicons name="today-outline" size={14} color={theme.accent} />
-          <Text style={styles.todayPillText}>Back to Today</Text>
-        </Pressable>
+        <View style={styles.pillsContainer}>
+          <Pressable
+            onPress={goToToday}
+            style={({ pressed }) => [
+              styles.todayPill,
+              pressed && styles.pressed,
+            ]}
+          >
+            <Ionicons name="today-outline" size={14} color={theme.accent} />
+            <Text style={styles.todayPillText}>Back to Today</Text>
+          </Pressable>
+
+          {isReadOnly && (
+            <Pressable
+              onPress={() => actualSetIsEditingPast(true)}
+              style={({ pressed }) => [
+                styles.editPill,
+                pressed && styles.pressed,
+              ]}
+            >
+              <Ionicons name="pencil" size={14} color={theme.text} />
+              <Text style={styles.editPillText}>Unlock to Edit</Text>
+            </Pressable>
+          )}
+        </View>
       )}
       <Animated.View
         pointerEvents={isReadOnly ? "none" : "auto"}
@@ -399,21 +407,44 @@ const createStyles = (theme: Theme) =>
       transform: [{ scale: 0.95 }],
     },
 
+    pillsContainer: {
+      flexDirection: "row",
+      justifyContent: "center",
+      gap: 12,
+      marginTop: 4,
+      marginBottom: 8,
+    },
+
     todayPill: {
       flexDirection: "row",
       alignItems: "center",
-      alignSelf: "center",
       gap: 6,
       backgroundColor: theme.accent + "15",
       paddingHorizontal: 16,
       paddingVertical: 8,
       borderRadius: 20,
-      marginTop: 4,
-      marginBottom: 8,
     },
 
     todayPillText: {
       color: theme.accent,
+      fontWeight: "700",
+      fontSize: 13,
+    },
+
+    editPill: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 6,
+      backgroundColor: theme.surface,
+      borderWidth: 1,
+      borderColor: theme.border,
+      paddingHorizontal: 16,
+      paddingVertical: 8,
+      borderRadius: 20,
+    },
+
+    editPillText: {
+      color: theme.text,
       fontWeight: "700",
       fontSize: 13,
     },

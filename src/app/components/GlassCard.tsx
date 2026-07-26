@@ -31,21 +31,5 @@ const createStyles = (theme: Theme, isDark: boolean) =>
       borderColor: theme.border,
       padding: 18,
       backgroundColor: theme.surface,
-      ...(isDark
-        ? Platform.select({
-            ios: {
-              shadowColor: "#000000",
-              shadowOffset: { width: 0, height: 8 },
-              shadowOpacity: 0.06,
-              shadowRadius: 24,
-            },
-            android: {
-              elevation: 4,
-            },
-            web: {
-              boxShadow: "0 8px 24px rgba(0,0,0,0.06)",
-            },
-          })
-        : {}),
     },
   });

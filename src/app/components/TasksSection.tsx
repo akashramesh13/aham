@@ -98,6 +98,26 @@ const TasksSection = ({
             )}
           </View>
         ))}
+
+        {allowAdd && (
+          <Pressable
+            style={({ pressed }) => [styles.addButton, pressed && styles.pressed]}
+            onPress={() => {
+              // Don't create multiple empty rows
+              if (value.length > 0 && value[value.length - 1].title.trim() === "") {
+                inputRefs.current[value.length - 1]?.focus();
+                return;
+              }
+              onChange([...value, createEmptyTask()]);
+              setTimeout(() => {
+                inputRefs.current[value.length]?.focus();
+              }, 50);
+            }}
+          >
+            <Ionicons name="add-circle-outline" size={18} color={theme.accent} />
+            <Text style={styles.addButtonText}>Add another</Text>
+          </Pressable>
+        )}
       </View>
     </View>
   );
@@ -127,6 +147,31 @@ const createStyles = (theme: Theme) =>
       flexDirection: "row",
       alignItems: "center",
       gap: 8,
+      marginBottom: 12,
+    },
+
+    addButton: {
+      marginTop: 8,
+      alignSelf: "center",
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      paddingHorizontal: 14,
+      paddingVertical: 8,
+      borderRadius: 18,
+      backgroundColor: theme.accent + "12",
+    },
+
+    addButtonText: {
+      marginLeft: 6,
+      color: theme.accent,
+      fontSize: 15,
+      fontWeight: "600",
+    },
+
+    pressed: {
+      opacity: 0.7,
+      transform: [{ scale: 0.97 }],
     },
   });
 

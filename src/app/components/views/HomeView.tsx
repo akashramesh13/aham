@@ -38,15 +38,6 @@ export default function HomeScreen() {
           <AppHeader title="अहम्" />
           <TodayOverview isEditingPast={isEditingPast} setIsEditingPast={setIsEditingPast} />
         </KeyboardAwareScrollView>
-        
-        {isReadOnly && (
-          <Pressable
-            style={({ pressed }) => [styles.floatingEditButton, pressed && styles.pressed]}
-            onPress={() => setIsEditingPast(true)}
-          >
-            <Ionicons name="pencil" size={24} color={theme.accent} />
-          </Pressable>
-        )}
       </SafeAreaView>
   );
 }
@@ -59,26 +50,6 @@ const createStyles = (theme: Theme) =>
     },
     scrollContent: {
       paddingHorizontal: 16,
-      paddingBottom: 130,
-    },
-    floatingEditButton: {
-      position: "absolute",
-      bottom: 100,
-      right: 24,
-      width: 56,
-      height: 56,
-      borderRadius: 28,
-      backgroundColor: theme.surface,
-      alignItems: "center",
-      justifyContent: "center",
-      shadowColor: theme.accent,
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.3,
-      shadowRadius: 8,
-      elevation: 6,
-    },
-    pressed: {
-      opacity: 0.7,
-      transform: [{ scale: 0.95 }],
+      paddingBottom: 80,
     },
   });
