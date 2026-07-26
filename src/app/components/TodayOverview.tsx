@@ -191,6 +191,7 @@ export default function TodayOverview({
     await handleSave();
 
     setSelectedDate(today);
+    router.setParams({ date: today });
     actualSetIsEditingPast(false);
   };
 
@@ -209,6 +210,7 @@ export default function TodayOverview({
     if (nextDate > today) return;
 
     setSelectedDate(nextDate);
+    router.setParams({ date: nextDate });
     actualSetIsEditingPast(false);
   };
 
