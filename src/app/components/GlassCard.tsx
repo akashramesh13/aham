@@ -12,8 +12,8 @@ export default function GlassCard({
   intensity,
   ...rest
 }: GlassCardProps) {
-  const { theme } = useTheme();
-  const styles = createStyles(theme);
+  const { theme, resolvedMode } = useTheme();
+  const styles = createStyles(theme, resolvedMode === "dark");
 
   return (
     <View style={[styles.card, style]} {...rest}>
@@ -22,7 +22,7 @@ export default function GlassCard({
   );
 }
 
-const createStyles = (theme: Theme) =>
+const createStyles = (theme: Theme, isDark: boolean) =>
   StyleSheet.create({
     card: {
       overflow: "hidden",
@@ -31,19 +31,21 @@ const createStyles = (theme: Theme) =>
       borderColor: theme.border,
       padding: 18,
       backgroundColor: theme.surface,
-      ...Platform.select({
-        ios: {
-          shadowColor: "#000000",
-          shadowOffset: { width: 0, height: 8 },
-          shadowOpacity: 0.06,
-          shadowRadius: 24,
-        },
-        android: {
-          elevation: 4,
-        },
-        web: {
-          boxShadow: "0 8px 24px rgba(0,0,0,0.06)",
-        },
-      }),
+      ...(isDark
+        ? Platform.select({
+            ios: {
+              shadowColor: "#000000",
+              shadowOffset: { width: 0, height: 8 },
+              shadowOpacity: 0.06,
+              shadowRadius: 24,
+            },
+            android: {
+              elevation: 4,
+            },
+            web: {
+              boxShadow: "0 8px 24px rgba(0,0,0,0.06)",
+            },
+          })
+        : {}),
     },
   });

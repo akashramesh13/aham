@@ -3,6 +3,7 @@ import { JournalEntry } from "@/types/journal";
 import { Task } from "@/types/tasks";
 import { Theme } from "@/types/theme";
 import { Ionicons } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
 import { useEffect, useRef, useState } from "react";
 import {
   Alert,
@@ -13,6 +14,7 @@ import {
   Text,
   View,
 } from "react-native";
+import Animated, { useSharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
 
 import useTheme from "../hooks/useTheme";
 
@@ -21,7 +23,15 @@ import HoursOfSleepCard from "./HoursOfSleepCard";
 import MoodCard from "./MoodCard";
 import TasksCard from "./TasksCard";
 
-const getToday = () => new Date().toISOString().slice(0, 10);
+/** Return YYYY-MM-DD in the device's local timezone (not UTC). */
+const getLocalDateString = (d: Date = new Date()): string => {
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+};
+
+const getToday = () => getLocalDateString();
 
 const emptyEntry = (date: string): JournalEntry => ({
   date,
@@ -39,13 +49,19 @@ const emptyTasks = (date: string): Task[] => [
   },
 ];
 
+/** Parse YYYY-MM-DD as local (not UTC) by splitting manually. */
+const parseLocalDate = (date: string): Date => {
+  const [y, m, d] = date.split("-").map(Number);
+  return new Date(y, m - 1, d);
+};
+
 const formatWeekday = (date: string) =>
-  new Date(date).toLocaleDateString(undefined, {
+  parseLocalDate(date).toLocaleDateString(undefined, {
     weekday: "long",
   });
 
 const formatDate = (date: string) =>
-  new Date(date).toLocaleDateString(undefined, {
+  parseLocalDate(date).toLocaleDateString(undefined, {
     day: "numeric",
     month: "long",
   });
@@ -85,6 +101,12 @@ export default function TodayOverview({
 
   const [carriedOverTasks, setCarriedOverTasks] = useState<Task[]>([]);
 
+  // Fade transition when switching days
+  const contentOpacity = useSharedValue(1);
+  const contentAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: contentOpacity.value,
+  }));
+
   const handleSave = async () => {
     if (!dirty || isSaving.current) return;
 
@@ -116,6 +138,7 @@ export default function TodayOverview({
   };
 
   const loadDay = async (date: string) => {
+    contentOpacity.value = withTiming(0.3, { duration: 100 });
     setLoadingDay(true);
 
     const data = await JournalService.load(date);
@@ -126,6 +149,7 @@ export default function TodayOverview({
 
     setDirty(false);
     setLoadingDay(false);
+    contentOpacity.value = withTiming(1, { duration: 200 });
   };
 
   useEffect(() => {
@@ -163,6 +187,7 @@ export default function TodayOverview({
   const goToToday = async () => {
     if (selectedDate === today) return;
 
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     await handleSave();
 
     setSelectedDate(today);
@@ -170,12 +195,20 @@ export default function TodayOverview({
   };
 
   const changeDay = async (offset: number) => {
+    // Prevent navigating to future dates
+    if (offset > 0 && selectedDate >= today) return;
+
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     await handleSave();
 
-    const next = new Date(selectedDate);
+    const next = parseLocalDate(selectedDate);
     next.setDate(next.getDate() + offset);
+    const nextDate = getLocalDateString(next);
 
-    setSelectedDate(next.toISOString().slice(0, 10));
+    // Don't go past today
+    if (nextDate > today) return;
+
+    setSelectedDate(nextDate);
     actualSetIsEditingPast(false);
   };
 
@@ -221,24 +254,47 @@ export default function TodayOverview({
         </Pressable>
 
         <View style={styles.right}>
-          {selectedDate !== today ? (
+          {selectedDate === today ? (
             <Pressable
-              onPress={goToToday}
+              onPress={() => changeDay(1)}
               style={({ pressed }) => [
-                styles.todayButton,
+                styles.iconButton,
+                styles.iconButtonDisabled,
+                pressed && styles.pressed,
+              ]}
+              disabled
+            >
+              <Ionicons name="chevron-forward" size={24} color={theme.textSecondary + "44"} />
+            </Pressable>
+          ) : (
+            <Pressable
+              onPress={() => changeDay(1)}
+              style={({ pressed }) => [
+                styles.iconButton,
                 pressed && styles.pressed,
               ]}
             >
-              <Text style={styles.todayButtonText}>Today</Text>
+              <Ionicons name="chevron-forward" size={24} color={theme.text} />
             </Pressable>
-          ) : (
-            <View style={{ width: 44 }} />
           )}
         </View>
       </View>
-      <View
+
+      {selectedDate !== today && (
+        <Pressable
+          onPress={goToToday}
+          style={({ pressed }) => [
+            styles.todayPill,
+            pressed && styles.pressed,
+          ]}
+        >
+          <Ionicons name="today-outline" size={14} color={theme.accent} />
+          <Text style={styles.todayPillText}>Back to Today</Text>
+        </Pressable>
+      )}
+      <Animated.View
         pointerEvents={isReadOnly ? "none" : "auto"}
-        style={{ opacity: isReadOnly ? 0.7 : 1 }}
+        style={[{ opacity: isReadOnly ? 0.7 : 1 }, contentAnimatedStyle]}
       >
         <Text style={styles.sectionTitle}>Daily Check-in</Text>
 
@@ -294,7 +350,7 @@ export default function TodayOverview({
           carriedOverTasks={carriedOverTasks}
           onCarriedOverTasksChange={setCarriedOverTasks}
         />
-      </View>
+      </Animated.View>
     </View>
   );
 }
@@ -333,22 +389,33 @@ const createStyles = (theme: Theme) =>
       borderColor: theme.border,
     },
 
+    iconButtonDisabled: {
+      opacity: 0.4,
+      borderColor: theme.border + "44",
+    },
+
     pressed: {
       opacity: 0.7,
       transform: [{ scale: 0.95 }],
     },
 
-    todayButton: {
-      backgroundColor: theme.accent + "22",
+    todayPill: {
+      flexDirection: "row",
+      alignItems: "center",
+      alignSelf: "center",
+      gap: 6,
+      backgroundColor: theme.accent + "15",
       paddingHorizontal: 16,
       paddingVertical: 8,
       borderRadius: 20,
+      marginTop: 4,
+      marginBottom: 8,
     },
 
-    todayButtonText: {
+    todayPillText: {
       color: theme.accent,
       fontWeight: "700",
-      fontSize: 14,
+      fontSize: 13,
     },
 
     title: {

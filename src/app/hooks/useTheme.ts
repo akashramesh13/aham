@@ -20,6 +20,7 @@ export default function useTheme() {
   return {
     theme: activeTheme,
     mode,
+    resolvedMode,
     setTheme,
   };
 }

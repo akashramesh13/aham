@@ -268,13 +268,7 @@ export default function Settings() {
           />
         </View>
 
-        <View style={styles.section}>
-          <Text style={[styles.heading, { fontSize: 16, color: theme.textSecondary }]}>Debug Info</Text>
-          <Text style={{ color: theme.textSecondary }}>Build: 2026-07-25 18:59</Text>
-          <Text style={{ color: theme.textSecondary }}>
-            Storage Value: {showLaunchAlways ? "ON" : "OFF"}
-          </Text>
-        </View>
+
       </ScrollView>
       </SafeAreaView>
   );

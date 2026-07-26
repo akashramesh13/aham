@@ -16,7 +16,14 @@ export default function HomeScreen() {
   const styles = createStyles(theme);
   const { date } = useLocalSearchParams<{ date?: string }>();
   
-  const today = new Date().toISOString().slice(0, 10);
+  /** Return YYYY-MM-DD in the device's local timezone (not UTC). */
+  const today = (() => {
+    const d = new Date();
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  })();
   const [isEditingPast, setIsEditingPast] = useState(false);
   const isReadOnly = date && date !== today && !isEditingPast;
 

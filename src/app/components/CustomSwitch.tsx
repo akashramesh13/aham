@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { Pressable, StyleSheet } from "react-native";
+import * as Haptics from "expo-haptics";
 import Animated, {
   interpolateColor,
   useAnimatedStyle,
@@ -72,7 +73,10 @@ export default function CustomSwitch({ value, onValueChange }: CustomSwitchProps
 
   return (
     <Pressable
-      onPress={() => onValueChange(!value)}
+      onPress={() => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+        onValueChange(!value);
+      }}
       style={styles.pressable}
       hitSlop={10}
     >

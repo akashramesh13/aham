@@ -1,6 +1,7 @@
 import { CustomChecklistProps } from "@/types/customChecklist";
 import { Theme } from "@/types/theme";
 import { Ionicons } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
 import { forwardRef } from "react";
 import { Pressable, StyleSheet, TextInput, View } from "react-native";
 import useTheme from "../hooks/useTheme";
@@ -20,7 +21,10 @@ const CustomChecklist = forwardRef<TextInput, CustomChecklistProps>(
       <View style={styles.container}>
         <Pressable
           disabled={value.trim().length === 0}
-          onPress={onToggle}
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            onToggle();
+          }}
           accessibilityRole="checkbox"
           accessibilityState={{
             checked,

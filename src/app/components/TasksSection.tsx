@@ -23,12 +23,18 @@ const TasksSection = ({
   const styles = createStyles(theme);
   const inputRefs = useRef<(TextInput | null)[]>([]);
 
-  const createEmptyTask = (): Task => ({
-    date: new Date().toISOString().slice(0, 10),
-    title: "",
-    completed: false,
-    createdAt: Date.now(),
-  });
+  const createEmptyTask = (): Task => {
+    const d = new Date();
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    return {
+      date: `${yyyy}-${mm}-${dd}`,
+      title: "",
+      completed: false,
+      createdAt: Date.now(),
+    };
+  };
   return (
     <View style={styles.section}>
       <Text style={styles.title}>{title}</Text>

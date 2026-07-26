@@ -12,17 +12,25 @@ import AppHeader from "../AppHeader";
 import MonthYearPicker from "../MonthYearPicker";
 import useTheme from "../../hooks/useTheme";
 
+/** Return YYYY-MM-DD in the device's local timezone (not UTC). */
+const getLocalDateString = (d: Date = new Date()): string => {
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+};
+
 export default function CalendarScreen() {
   const { theme, mode } = useTheme();
   const styles = createStyles(theme);
 
   const [markedDates, setMarkedDates] = useState<Record<string, any>>({});
   const [isPickerVisible, setIsPickerVisible] = useState(false);
-  const [currentMonth, setCurrentMonth] = useState(new Date().toISOString().slice(0, 10));
+  const [currentMonth, setCurrentMonth] = useState(getLocalDateString());
   // Track the date the user last tapped — persists across tab switches
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
-  const today = new Date().toISOString().slice(0, 10);
+  const today = getLocalDateString();
 
   useFocusEffect(
     useCallback(() => {
@@ -135,8 +143,8 @@ export default function CalendarScreen() {
             onDayPress={(day: any) => {
               setSelectedDate(day.dateString);
               router.push({
-                pathname: "/(tabs)",
-                params: { date: day.dateString },
+                pathname: "/",
+                params: { tab: "home", date: day.dateString },
               });
             }}
           />

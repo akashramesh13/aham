@@ -1,16 +1,65 @@
-import { View, Pressable, StyleSheet, Platform, LayoutChangeEvent } from "react-native";
+import { View, Pressable, StyleSheet, Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
 import useTheme from "../hooks/useTheme";
 import { Theme } from "@/types/theme";
 import GlassCard from "./GlassCard";
-import Animated, { useAnimatedStyle, withSpring } from "react-native-reanimated";
-import { useState } from "react";
+import Animated, {
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+  useSharedValue,
+  interpolate,
+  Extrapolation,
+} from "react-native-reanimated";
+import { useEffect } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Keyboard } from "react-native";
 
 const TAB_WIDTH = 60;
 
 export default function CustomTabBar({ activeIndex, onTabPress }: { activeIndex: number, onTabPress: (index: number) => void }) {
   const { theme } = useTheme();
-  const styles = createStyles(theme);
+  const insets = useSafeAreaInsets();
+  const bottomOffset = Math.max(insets.bottom, Platform.OS === "ios" ? 8 : 12) + 8;
+  const styles = createStyles(theme, bottomOffset);
+
+  // Keyboard-aware visibility
+  const keyboardVisible = useSharedValue(0);
+
+  useEffect(() => {
+    const showSub = Keyboard.addListener(
+      Platform.OS === "ios" ? "keyboardWillShow" : "keyboardDidShow",
+      () => { keyboardVisible.value = withTiming(1, { duration: 200 }); }
+    );
+    const hideSub = Keyboard.addListener(
+      Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide",
+      () => { keyboardVisible.value = withTiming(0, { duration: 200 }); }
+    );
+    return () => {
+      showSub.remove();
+      hideSub.remove();
+    };
+  }, []);
+
+  const containerAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        translateY: interpolate(
+          keyboardVisible.value,
+          [0, 1],
+          [0, 120],
+          Extrapolation.CLAMP
+        ),
+      },
+    ],
+    opacity: interpolate(
+      keyboardVisible.value,
+      [0, 0.5],
+      [1, 0],
+      Extrapolation.CLAMP
+    ),
+  }));
 
   const animatedIndicatorStyle = useAnimatedStyle(() => {
     return {
@@ -33,7 +82,7 @@ export default function CustomTabBar({ activeIndex, onTabPress }: { activeIndex:
   ] as const;
 
   return (
-    <View style={styles.container} pointerEvents="box-none">
+    <Animated.View style={[styles.container, containerAnimatedStyle]} pointerEvents="box-none">
       <GlassCard style={styles.pill}>
         <Animated.View style={[styles.indicator, animatedIndicatorStyle]} />
 
@@ -41,6 +90,7 @@ export default function CustomTabBar({ activeIndex, onTabPress }: { activeIndex:
           const isFocused = activeIndex === index;
 
           const onPress = () => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             onTabPress(index);
           };
 
@@ -64,7 +114,7 @@ export default function CustomTabBar({ activeIndex, onTabPress }: { activeIndex:
           );
         })}
       </GlassCard>
-    </View>
+    </Animated.View>
   );
 }
 
@@ -90,15 +140,17 @@ function AnimatedIcon({ name, size, color, isFocused }: any) {
   );
 }
 
-const createStyles = (theme: Theme) =>
+const createStyles = (theme: Theme, bottomOffset: number) =>
   StyleSheet.create({
     container: {
       position: "absolute",
-      bottom: Platform.OS === "ios" ? 32 : 24,
+      bottom: bottomOffset,
       left: 0,
       right: 0,
       alignItems: "center",
       justifyContent: "center",
+      zIndex: 100,
+      elevation: 100,
     },
     pill: {
       flexDirection: "row",

@@ -1,6 +1,7 @@
 import { HoursOfSleepCardProps } from "@/types/hoursOfSleep";
 import { Theme } from "@/types/theme";
 import { Ionicons } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
 import {
   Platform,
   Pressable,
@@ -35,6 +36,9 @@ const HoursOfSleepCard = ({ value, onChange }: HoursOfSleepCardProps) => {
   const adjust = (delta: number) => {
     const current = value ?? 0;
     const next = Math.max(0, Math.min(24, current + delta));
+    if (next !== current) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
     onChange(next);
   };
 

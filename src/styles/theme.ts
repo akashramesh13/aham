@@ -1,18 +1,18 @@
 import { Theme } from "@/types/theme";
 
 export const lightTheme: Theme = {
-  background: "#FDFBF7",
-  surface: "#FFFFFF",
-  surface2: "#F4F2EC",
+  background: "#F5F3EF",
+  surface: "#EDEAE4",
+  surface2: "#E5E2DC",
 
-  text: "#111111",
-  textSecondary: "#555555",
+  text: "#1A1A1A",
+  textSecondary: "#6B6560",
 
-  border: "#EAEAEA",
+  border: "#DDD9D3",
 
   accent: "#8A0322",
   heroAccent: "#CA2127",
-  today: "#111111",
+  today: "#1A1A1A",
 };
 
 export const darkTheme: Theme = {
