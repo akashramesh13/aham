@@ -53,6 +53,8 @@ export default function GratitudeCard({
             onSubmitEditing={() => {
               if (index < gratitude.length - 1) {
                 inputRefs.current[index + 1]?.focus();
+              } else {
+                addGratitude();
               }
             }}
           />
