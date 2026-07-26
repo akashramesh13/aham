@@ -73,6 +73,7 @@ export default function CalendarScreen() {
             backgroundColor: theme.accent,
             borderWidth: 2,
             borderColor: theme.accent,
+            borderRadius: 18,
             alignItems: "center" as const,
             justifyContent: "center" as const,
           },
