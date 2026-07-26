@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
-import { router, useFocusEffect } from "expo-router";
-import { useCallback, useState } from "react";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
+import { useCallback, useState, useEffect } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -23,12 +23,20 @@ const getLocalDateString = (d: Date = new Date()): string => {
 export default function CalendarScreen() {
   const { theme, mode } = useTheme();
   const styles = createStyles(theme);
+  const params = useLocalSearchParams<{ date?: string }>();
 
   const [markedDates, setMarkedDates] = useState<Record<string, any>>({});
   const [isPickerVisible, setIsPickerVisible] = useState(false);
-  const [currentMonth, setCurrentMonth] = useState(getLocalDateString());
+  const [currentMonth, setCurrentMonth] = useState(params.date || getLocalDateString());
   // Track the date the user last tapped — persists across tab switches
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string | null>(params.date || null);
+
+  useEffect(() => {
+    if (params.date) {
+      setSelectedDate(params.date);
+      setCurrentMonth(params.date);
+    }
+  }, [params.date]);
 
   const today = getLocalDateString();
 
@@ -53,35 +61,11 @@ export default function CalendarScreen() {
       result[d] = { ...markedDates[d] };
     });
 
-    // Today: accent-colored text, no background
-    result[today] = {
-      ...(result[today] || {}),
-      customStyles: {
-        text: {
-          color: theme.accent,
-          fontWeight: "700" as const,
-        },
-      },
-    };
-
-    // Selected date (if different from today): accent ring/circle
-    if (selectedDate && selectedDate !== today) {
+    // Highlight the selected date
+    if (selectedDate) {
       result[selectedDate] = {
         ...(result[selectedDate] || {}),
-        customStyles: {
-          container: {
-            backgroundColor: theme.accent,
-            borderWidth: 2,
-            borderColor: theme.accent,
-            borderRadius: 18,
-            alignItems: "center" as const,
-            justifyContent: "center" as const,
-          },
-          text: {
-            color: theme.background,
-            fontWeight: "700" as const,
-          },
-        },
+        selected: true,
       };
     }
 
@@ -117,7 +101,6 @@ export default function CalendarScreen() {
             maxDate={today}
             hideExtraDays={true}
             disableArrowRight={currentMonth.startsWith(today.slice(0, 7))}
-            markingType="custom"
             onMonthChange={(month: any) => setCurrentMonth(month.dateString)}
             renderHeader={renderCustomHeader}
             style={styles.calendar}
@@ -125,9 +108,13 @@ export default function CalendarScreen() {
               backgroundColor: "transparent",
               calendarBackground: "transparent",
               textSectionTitleColor: theme.textSecondary,
+              selectedDayBackgroundColor: theme.accent,
+              selectedDayTextColor: theme.background,
+              todayTextColor: theme.accent,
               dayTextColor: theme.text,
               textDisabledColor: theme.textSecondary + "55",
               dotColor: theme.accent,
+              selectedDotColor: theme.background,
               arrowColor: theme.text,
               monthTextColor: theme.text,
               textDayFontWeight: "500",
